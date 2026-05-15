@@ -2,12 +2,12 @@
 
 ## Services Needed (all have free tiers)
 
-| Service | Purpose | Free Tier |
-|---------|---------|-----------|
+| Service  | Purpose         | Free Tier                          |
+| -------- | --------------- | ---------------------------------- |
 | Supabase | Database + Auth | 500MB DB, 50k monthly active users |
-| Resend | Email delivery | 3,000 emails/month |
-| Vercel | Hosting + Cron | Hobby plan — free |
-| GitHub | Repo + CI/CD | Free |
+| Resend   | Email delivery  | 3,000 emails/month                 |
+| Vercel   | Hosting + Cron  | Hobby plan — free                  |
+| GitHub   | Repo + CI/CD    | Free                               |
 
 ---
 
@@ -51,6 +51,7 @@ git push -u origin main
 ```
 
 Make sure `.env.local` is in `.gitignore`:
+
 ```
 # .gitignore additions
 .env.local
@@ -59,27 +60,44 @@ Make sure `.env.local` is in `.gitignore`:
 
 ---
 
-## Step 4 — Vercel Deployment
+## Step 4 — Vercel Deployment (Import from GitHub)
 
-1. Go to vercel.com → Import Git Repository → select `duely`
-2. Framework: Next.js (auto-detected)
-3. Add all environment variables:
-   ```
-   NEXT_PUBLIC_SUPABASE_URL
-   NEXT_PUBLIC_SUPABASE_ANON_KEY
-   SUPABASE_SERVICE_ROLE_KEY
-   RESEND_API_KEY
-   NEXT_PUBLIC_APP_URL         → https://your-project.vercel.app
-   CRON_SECRET                 → generate: openssl rand -hex 32
-   ```
-4. Deploy → Vercel auto-builds from main branch
-5. Set custom domain if desired (Settings → Domains)
+Use this flow when deploying from GitHub in the Vercel dashboard.
+
+1. Go to vercel.com → **Add New...** → **Project**
+2. Import your GitHub repository
+3. In **Configure Project**, use these values:
+
+| Field            | Value                     |
+| ---------------- | ------------------------- |
+| Framework Preset | Next.js (auto-detected)   |
+| Root Directory   | `duely`                   |
+| Build Command    | `npm run build` (default) |
+| Install Command  | `npm install` (default)   |
+| Output Directory | `.next` (default/auto)    |
+
+`Root Directory` must be `duely` because the Next.js app and `vercel.json` live in the `duely/` subfolder, while the repo root contains docs and other assets.
+
+4. Add all environment variables:
+
+```
+NEXT_PUBLIC_SUPABASE_URL
+NEXT_PUBLIC_SUPABASE_ANON_KEY
+SUPABASE_SERVICE_ROLE_KEY
+RESEND_API_KEY
+NEXT_PUBLIC_APP_URL         -> https://your-project.vercel.app
+CRON_SECRET                 -> generate: openssl rand -hex 32
+```
+
+5. Click **Deploy** (Vercel will build from your default branch)
+6. Set custom domain if desired (Settings → Domains)
 
 ---
 
 ## Step 5 — Cron Job Verification
 
 The `vercel.json` cron config runs daily at 9am UTC:
+
 ```json
 {
   "crons": [
@@ -95,6 +113,7 @@ Vercel automatically calls this with the `Authorization: Bearer <CRON_SECRET>` h
 Check Vercel Dashboard → Functions → Cron Jobs to verify it's registered.
 
 To test manually:
+
 ```bash
 curl -X POST https://your-project.vercel.app/api/cron/check-overdue \
   -H "Authorization: Bearer YOUR_CRON_SECRET"
@@ -107,24 +126,25 @@ curl -X POST https://your-project.vercel.app/api/cron/check-overdue \
 Add this route for OAuth/magic link callbacks:
 
 ### src/app/auth/callback/route.ts
+
 ```typescript
-import { createClient } from '@/lib/supabase/server'
-import { NextResponse } from 'next/server'
+import { createClient } from "@/lib/supabase/server";
+import { NextResponse } from "next/server";
 
 export async function GET(request: Request) {
-  const { searchParams, origin } = new URL(request.url)
-  const code = searchParams.get('code')
-  const next = searchParams.get('next') ?? '/dashboard'
+  const { searchParams, origin } = new URL(request.url);
+  const code = searchParams.get("code");
+  const next = searchParams.get("next") ?? "/dashboard";
 
   if (code) {
-    const supabase = await createClient()
-    const { error } = await supabase.auth.exchangeCodeForSession(code)
+    const supabase = await createClient();
+    const { error } = await supabase.auth.exchangeCodeForSession(code);
     if (!error) {
-      return NextResponse.redirect(`${origin}${next}`)
+      return NextResponse.redirect(`${origin}${next}`);
     }
   }
 
-  return NextResponse.redirect(`${origin}/login?error=auth_callback_failed`)
+  return NextResponse.redirect(`${origin}/login?error=auth_callback_failed`);
 }
 ```
 
@@ -161,16 +181,21 @@ Before deploying, confirm all are set in Vercel:
 ## Common Issues
 
 ### "Invalid API key" from Supabase
+
 → Check you're using anon key for client-side, service role for server-side cron only
 
 ### Email not delivered
+
 → Check Resend dashboard for delivery status. For testing, use your verified email address as recipient
 
 ### RLS blocking data
+
 → Make sure the `handle_new_user` trigger ran and created the profile row. Check profiles table in Supabase
 
 ### Cron returning 401
+
 → Make sure CRON_SECRET in Vercel matches exactly what's in vercel.json header logic
 
 ### Middleware redirect loop
+
 → Check middleware matcher config — make sure /api/ routes and static files are excluded
