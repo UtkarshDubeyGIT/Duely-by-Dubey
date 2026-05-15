@@ -3,8 +3,7 @@ import { NextResponse, type NextRequest } from "next/server";
 
 const publicRoutes = ["/", "/login", "/signup"];
 
-const supabaseUrl =
-  process.env.NEXT_PUBLIC_SUPABASE_URL?.trim() || "";
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL?.trim() || "";
 const supabaseAnonKey =
   process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY?.trim() ||
   process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY?.trim() ||
@@ -26,9 +25,13 @@ export async function middleware(request: NextRequest) {
         return request.cookies.getAll();
       },
       setAll(cookiesToSet) {
-        cookiesToSet.forEach(({ name, value }) => request.cookies.set(name, value));
+        cookiesToSet.forEach(({ name, value }) =>
+          request.cookies.set(name, value),
+        );
         response = NextResponse.next({ request });
-        cookiesToSet.forEach(({ name, value, options }) => response.cookies.set(name, value, options));
+        cookiesToSet.forEach(({ name, value, options }) =>
+          response.cookies.set(name, value, options),
+        );
       },
     },
   });
@@ -38,7 +41,9 @@ export async function middleware(request: NextRequest) {
   } = await supabase.auth.getUser();
 
   const isPublic = publicRoutes.some((route) =>
-    route === "/" ? request.nextUrl.pathname === "/" : request.nextUrl.pathname.startsWith(route),
+    route === "/"
+      ? request.nextUrl.pathname === "/"
+      : request.nextUrl.pathname.startsWith(route),
   );
 
   if (!user && !isPublic && !request.nextUrl.pathname.startsWith("/api")) {
@@ -57,5 +62,7 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)"],
+  matcher: [
+    "/((?!_next/static|_next/image|favicon.ico|.*\\.(?:svg|png|jpg|jpeg|gif|webp)$).*)",
+  ],
 };
