@@ -2,7 +2,14 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { Bell, FileText, LayoutDashboard, LogOut, Settings, Users } from "lucide-react";
+import {
+  Bell,
+  FileText,
+  LayoutDashboard,
+  LogOut,
+  Settings,
+  Users,
+} from "lucide-react";
 import { BrandLogoLink } from "@/components/shared/BrandLogoLink";
 import { cn } from "@/lib/utils";
 
@@ -24,7 +31,10 @@ export function Sidebar() {
       <nav className="flex-1 space-y-1 px-3 py-4">
         {nav.map((item) => {
           const Icon = item.icon;
-          const active = item.href === "/" ? pathname === "/" : pathname.startsWith(item.href);
+          const active =
+            item.href === "/"
+              ? pathname === "/"
+              : pathname.startsWith(item.href);
           return (
             <Link
               key={item.href}

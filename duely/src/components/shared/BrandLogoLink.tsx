@@ -8,9 +8,17 @@ type BrandLogoLinkProps = {
   priority?: boolean;
 };
 
-export function BrandLogoLink({ className, imageClassName, priority = false }: BrandLogoLinkProps) {
+export function BrandLogoLink({
+  className,
+  imageClassName,
+  priority = false,
+}: BrandLogoLinkProps) {
   return (
-    <Link href="/" className={cn("inline-flex items-center", className)} aria-label="Go to home page">
+    <Link
+      href="/"
+      className={cn("inline-flex items-center", className)}
+      aria-label="Go to home page"
+    >
       <Image
         src="/duely-logo.png"
         alt="Duely"

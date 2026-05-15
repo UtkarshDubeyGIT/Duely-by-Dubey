@@ -82,8 +82,8 @@ export default function LandingPage() {
               <span className="block text-[#4b39e6]">Every time.</span>
             </h1>
             <p className="mt-6 max-w-2xl text-lg leading-8 text-[#4d5157] md:text-xl">
-              The platform sends smart reminders, pauses when clients respond, and
-              shows you exactly when to follow up. Stop chasing payments and
+              The platform sends smart reminders, pauses when clients respond,
+              and shows you exactly when to follow up. Stop chasing payments and
               focus on the work itself.
             </p>
             <div className="mt-10 flex flex-col gap-4 sm:flex-row">
@@ -289,7 +289,9 @@ export default function LandingPage() {
               Security
             </a>
           </div>
-          <div className="text-sm text-white/55">© 2026. All rights reserved.</div>
+          <div className="text-sm text-white/55">
+            © 2026. All rights reserved.
+          </div>
         </div>
       </footer>
     </main>
