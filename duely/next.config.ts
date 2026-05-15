@@ -1,11 +1,5 @@
 import type { NextConfig } from "next";
 
-const appRoot = process.cwd();
-
-const nextConfig: NextConfig = {
-  turbopack: {
-    root: appRoot,
-  },
-};
+const nextConfig: NextConfig = {};
 
 export default nextConfig;
