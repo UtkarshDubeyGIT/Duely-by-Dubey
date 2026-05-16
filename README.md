@@ -10,7 +10,7 @@ Duely is a smart invoice and payment reminder platform that thinks ahead so smal
 
 ## Live Demo
 
-🔗 [duely.vercel.app](https://duely.vercel.app)
+🔗 [duely.tech](https://duely.tech)
 
 **Test credentials:**
 - Email: `demo@duely.co`
@@ -130,7 +130,7 @@ It provides a robust backend-as-a-service with Auth, Postgres, and Row Level Sec
 React Email allows us to build templates with the same component-based logic as our UI, making them easy to test and maintain. Resend provides a developer-friendly API for reliable delivery.
 
 **Why Vercel Cron?**
-It enables serverless automation without managing extra infrastructure. A daily job checks for overdue invoices and triggers the next step in the reminder sequence.
+It enables serverless automation feature of Automatic reminders without managing extra infrastructure. A daily job checks for overdue invoices and triggers the next step in the reminder sequence. 
 
 **Data Isolation:**
 Every record is scoped to an `organization_id`. Database-level RLS policies ensure that users can only access data belonging to their specific organization.
