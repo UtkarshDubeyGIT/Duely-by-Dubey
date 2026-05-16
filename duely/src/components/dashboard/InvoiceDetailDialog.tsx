@@ -2,23 +2,17 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { 
-  Mail, 
   Send, 
   Calendar, 
-  User, 
-  DollarSign,
   AlertCircle,
   Trash2,
   ReceiptText,
   Clock,
-  CheckCircle2,
-  FileText,
-  ChevronRight
+  CheckCircle2
 } from "lucide-react";
 import {
   Dialog,
   DialogContent,
-  DialogHeader,
   DialogTitle,
   DialogFooter,
 } from "@/components/ui/dialog";
