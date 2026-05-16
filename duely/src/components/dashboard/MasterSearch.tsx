@@ -44,11 +44,11 @@ export function MasterSearch() {
 
   const handleSelect = (id: string) => {
     setOpen(false);
-    setSelectedInvoiceId(id);
-    // Delay opening the detail dialog to let the search dialog close smoothly
+    // Delay opening the detail dialog to let the search dialog close fully
     setTimeout(() => {
+      setSelectedInvoiceId(id);
       setDetailOpen(true);
-    }, 150);
+    }, 300);
   };
 
   if (!mounted) return (
@@ -103,6 +103,7 @@ export function MasterSearch() {
 
       {selectedInvoiceId && (
         <InvoiceDetailDialog
+          key={selectedInvoiceId}
           invoiceId={selectedInvoiceId}
           open={detailOpen}
           onOpenChange={setDetailOpen}
