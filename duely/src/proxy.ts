@@ -24,13 +24,13 @@ export async function proxy(request: NextRequest) {
       },
       setAll(cookiesToSet) {
         cookiesToSet.forEach(({ name, value, options }) =>
-          request.cookies.set(name, value)
+          request.cookies.set(name, value),
         );
         supabaseResponse = NextResponse.next({
           request,
         });
         cookiesToSet.forEach(({ name, value, options }) =>
-          supabaseResponse.cookies.set(name, value, options)
+          supabaseResponse.cookies.set(name, value, options),
         );
       },
     },
@@ -45,13 +45,17 @@ export async function proxy(request: NextRequest) {
   const isPublic = publicRoutes.some((route) =>
     route === "/"
       ? request.nextUrl.pathname === "/"
-      : request.nextUrl.pathname.startsWith(route)
+      : request.nextUrl.pathname.startsWith(route),
   );
 
   const hasSession = !!user;
 
   // Redirect unauthenticated users away from protected routes
-  if (!hasSession && !isPublic && !request.nextUrl.pathname.startsWith("/api")) {
+  if (
+    !hasSession &&
+    !isPublic &&
+    !request.nextUrl.pathname.startsWith("/api")
+  ) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";
     return NextResponse.redirect(url);
@@ -63,7 +67,7 @@ export async function proxy(request: NextRequest) {
     url.pathname = "/dashboard";
     return NextResponse.redirect(url);
   }
-  
+
   if (hasSession && request.nextUrl.pathname === "/signup") {
     const url = request.nextUrl.clone();
     url.pathname = "/dashboard";
