@@ -60,7 +60,7 @@ export default function LandingPage() {
           <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 md:px-10">
             <BrandLogoLink
               priority
-              imageClassName="h-16 w-auto md:h-18 dark:invert"
+              imageClassName="h-16 w-auto md:h-18"
             />
             <div className="flex items-center gap-3">
               <ModeToggle />
