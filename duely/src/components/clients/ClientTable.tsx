@@ -92,14 +92,14 @@ export function ClientTable({ clients }: { clients: Client[] }) {
                           <MoreHorizontal className="h-4 w-4" />
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end" className="w-[160px]">
-                        <DropdownMenuItem onSelect={() => setEditingClient(client)}>
+                        <DropdownMenuItem onClick={() => setEditingClient(client)}>
                           <div className="flex w-full items-center">
                             <Edit2 className="h-4 w-4 mr-2" />
                             Edit Client
                           </div>
                         </DropdownMenuItem>
                         <DropdownMenuItem 
-                          onSelect={() => setDeletingClient(client)}
+                          onClick={() => setDeletingClient(client)}
                           className="text-red-600 focus:bg-red-50 focus:text-red-600 dark:focus:bg-red-950/20"
                         >
                           <div className="flex w-full items-center">
