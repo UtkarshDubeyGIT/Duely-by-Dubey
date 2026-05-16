@@ -63,7 +63,7 @@ function getSessionFromCookies(request: NextRequest): boolean {
   return false;
 }
 
-export async function middleware(request: NextRequest) {
+export async function proxy(request: NextRequest) {
   const isPublic = publicRoutes.some((route) =>
     route === "/"
       ? request.nextUrl.pathname === "/"
