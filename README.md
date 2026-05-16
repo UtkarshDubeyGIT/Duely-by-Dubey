@@ -15,8 +15,9 @@ Duely is a smart invoice and payment reminder platform that thinks ahead so smal
 🔗 [duely.tech](https://duely.tech)
 
 **Test credentials:**
-- Email: `demo@duely.co`
-- Password: `demo1234`
+- Click **"See how it works"** on the landing page to auto-fill demo credentials.
+- Email: `demo@duely.tech`
+- Password: `Duely@2025`
 
 ---
 
@@ -29,12 +30,12 @@ Duely is a smart invoice and payment reminder platform that thinks ahead so smal
 - ✅ **Reminder Activity Log** — Full transparency with a history of every reminder sent, opened, or failed.
 - ✅ **Advanced Search & Filtering** — Filter by status, date ranges, and search by client or invoice number.
 - ✅ **Comprehensive Dashboard** — High-level stats, overdue alerts, upcoming reminders, and payment trend charts.
-- ✅ **Responsive Design** — Fully optimized for mobile, tablet, and desktop using a premium Shadcn/UI layout.
+- ✅ **Responsive Design** — Fully optimized for mobile, tablet, and desktop using a premium Base UI layout.
 
 ### What Makes Duely Different
-- 🧠 **Smart Reminder Scheduling** — Automatically generates a sequence of reminders based on the due date.
-- ⏸️ **Intelligent Pause** — Automatically pauses reminder sequences when a client responds or payment is detected.
-- 📊 **Client Reliability Scores** — Categorizes clients (Reliable, Slow, At Risk) based on historical payment performance.
+- 🧠 **Smart Reminder Scheduling** — Automatically generates a 5-step sequence of reminders based on the due date.
+- ⏸️ **Intelligent Sync** — Automatically cancels reminder sequences when an invoice is marked as Paid or Draft.
+- 📊 **Client Reliability Scores** — Categorizes clients (Reliable, Slow, At Risk, New) based on historical payment performance.
 - 🎭 **Tone-Escalating Emails** — Seamlessly transitions from *Friendly* to *Firm* to *Final Notice* as deadlines pass.
 - 💬 **Human-Centric Communication** — Emails are crafted to sound professional and personal, not robotic.
 
@@ -44,11 +45,12 @@ Duely is a smart invoice and payment reminder platform that thinks ahead so smal
 
 | Layer | Technology |
 |-------|-----------|
-| **Framework** | Next.js 16 (App Router) |
+| **Framework** | Next.js 16.2 (App Router + Turbopack) |
 | **Language** | TypeScript |
-| **Styling** | Tailwind CSS 4 + Shadcn/UI |
+| **UI Primitive** | Base UI (@base-ui/react) |
+| **Styling** | Tailwind CSS 4 |
 | **Database** | Supabase (PostgreSQL) |
-| **Auth** | Supabase Auth |
+| **Auth** | Supabase Auth (@supabase/ssr) |
 | **Email** | Resend + React Email |
 | **Analytics** | Recharts |
 | **Deployment** | Vercel |
@@ -59,7 +61,7 @@ Duely is a smart invoice and payment reminder platform that thinks ahead so smal
 ## Getting Started
 
 ### Prerequisites
-- Node.js 18+
+- Node.js 20+
 - A Supabase account
 - A Resend account
 
@@ -91,6 +93,8 @@ Run the SQL migrations in order in your Supabase SQL editor:
 - `supabase/migrations/002_reminders.sql`
 - `supabase/migrations/003_seed_demo_data.sql`
 - `supabase/migrations/004_security_hardening.sql`
+- `supabase/migrations/005_revoke_public_rpc.sql`
+- `supabase/migrations/006_fix_demo_auth_tokens.sql`
 
 ### 4. Run locally
 ```bash
@@ -110,14 +114,14 @@ duely/src/
 │   ├── (dashboard)/     # Protected dashboard routes (Invoices, Clients, Reminders)
 │   └── api/             # API endpoints and Cron handlers
 ├── components/
-│   ├── clients/         # Client management components & Reliability badges
+│   ├── clients/         # Client management & Table logic
 │   ├── dashboard/       # Stats cards and payment charts
-│   ├── invoices/        # Invoice tables, forms, and dialogs
-│   ├── shared/          # Navigation, Sidebar, and Layout elements
-│   └── ui/              # Base Shadcn/UI components
+│   ├── invoices/        # Invoice actions, forms, and dialogs
+│   ├── shared/          # Navigation, Sidebar, and UserNav
+│   └── ui/              # Base UI + Tailwind 4 primitives
 ├── emails/              # React Email templates
-├── hooks/               # Custom React hooks
-├── lib/                 # Shared utilities (Supabase client, Resend, etc.)
+├── hooks/               # Custom React hooks (use-mobile, etc.)
+├── lib/                 # Core logic (Supabase client, Resend, data fetching)
 └── types/               # TypeScript definitions
 ```
 
@@ -126,25 +130,25 @@ duely/src/
 ## Architecture Decisions
 
 **Why Supabase?**
-It provides a robust backend-as-a-service with Auth, Postgres, and Row Level Security (RLS) out of the box. Multi-tenancy is handled natively by `organization_id` filters and RLS policies, ensuring data isolation.
+It provides a robust backend-as-a-service with Auth, Postgres, and Row Level Security (RLS) out of the box. Multi-tenancy is handled natively by `org_id` filters and RLS policies, ensuring strict data isolation.
 
-**Why Resend + React Email?**
-React Email allows us to build templates with the same component-based logic as our UI, making them easy to test and maintain. Resend provides a developer-friendly API for reliable delivery.
+**Why Next.js 16 + React 19?**
+Leverages the latest React features like Server Actions and optimized rendering, providing a bleeding-edge, high-performance user experience.
+
+**Why Base UI + Tailwind 4?**
+Base UI provides unstyled, accessible primitives that allow for full design control, while Tailwind 4 offers significant performance improvements and a simplified configuration model.
 
 **Why Vercel Cron?**
-It enables serverless automation feature of Automatic reminders without managing extra infrastructure. A daily job checks for overdue invoices and triggers the next step in the reminder sequence. 
-
-**Data Isolation:**
-Every record is scoped to an `organization_id`. Database-level RLS policies ensure that users can only access data belonging to their specific organization.
+Enables serverless automation of smart reminders without managing extra infrastructure. A daily job checks for overdue invoices and triggers the next step in the reminder sequence.
 
 ---
 
 ## Security
 
 - **Environment Isolation** — All sensitive keys are managed via environment variables.
-- **Database Security** — Row Level Security (RLS) is enabled on all tables.
+- **Database Security** — Row Level Security (RLS) is enabled on all tables; public RPC access is revoked.
 - **API Protection** — Critical endpoints (like Cron) are secured with Bearer token authentication.
-- **Auth** — Secure JWT-based sessions managed by Supabase.
+- **Auth** — Secure JWT-based sessions managed by Supabase SSR.
 
 ---
 
@@ -156,3 +160,15 @@ Every record is scoped to an `organization_id`. Database-level RLS policies ensu
 - [ ] PDF generation for invoices
 - [ ] Team collaboration (Multiple users per Org)
 - [ ] QuickBooks/Xero integration
+
+---
+
+## Author
+
+**Utkarsh Dubey** — Built for BinaryAutomates Software Engineering Internship
+
+---
+
+## License
+
+MIT
