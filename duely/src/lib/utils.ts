@@ -14,8 +14,15 @@ export function formatCurrency(amount: number, currency = "USD") {
   }).format(amount);
 }
 
-export function formatDate(date: string) {
-  return format(new Date(`${date}T00:00:00`), "MMM d, yyyy");
+export function formatDate(date: string | null | undefined) {
+  if (!date) return "N/A";
+  
+  // If it's just a date string (YYYY-MM-DD), add the time part to ensure consistency
+  const dateStr = date.includes("T") ? date : `${date}T00:00:00`;
+  const d = new Date(dateStr);
+  
+  if (isNaN(d.getTime())) return "Invalid Date";
+  return format(d, "MMM d, yyyy");
 }
 
 export function daysOverdue(dueDate: string) {

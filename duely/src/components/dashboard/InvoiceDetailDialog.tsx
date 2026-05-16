@@ -132,32 +132,32 @@ export function InvoiceDetailDialog({
           ) : invoice ? (
             <div className="grid gap-8 py-4 lg:grid-cols-2">
               {/* Left Column: Info */}
-              <div className="space-y-6">
+              <div className="space-y-6 text-zinc-950 dark:text-zinc-50">
                 <div>
                   <h4 className="text-xs font-semibold uppercase tracking-wider text-zinc-500 mb-3">General Information</h4>
                   <div className="grid gap-4 rounded-xl border border-zinc-100 dark:border-zinc-800 p-4 bg-zinc-50/50 dark:bg-zinc-900/20">
-                    <div className="flex items-center gap-3 text-zinc-950 dark:text-zinc-50">
+                    <div className="flex items-center gap-3">
                       <User className="h-4 w-4 text-zinc-400" />
                       <div>
                         <p className="text-xs text-zinc-500">Client</p>
-                        <p className="text-sm font-medium">{invoice.client?.name}</p>
+                        <p className="text-sm font-medium">{invoice.client?.name || "Unknown"}</p>
                       </div>
                     </div>
-                    <div className="flex items-center gap-3 text-zinc-950 dark:text-zinc-50">
+                    <div className="flex items-center gap-3">
                       <Calendar className="h-4 w-4 text-zinc-400" />
                       <div>
                         <p className="text-xs text-zinc-500">Issued Date</p>
                         <p className="text-sm font-medium">{formatDate(invoice.issued_date)}</p>
                       </div>
                     </div>
-                    <div className="flex items-center gap-3 text-zinc-950 dark:text-zinc-50">
+                    <div className="flex items-center gap-3">
                       <Calendar className="h-4 w-4 text-zinc-400" />
                       <div>
                         <p className="text-xs text-zinc-500">Due Date</p>
                         <p className="text-sm font-medium">{formatDate(invoice.due_date)}</p>
                       </div>
                     </div>
-                    <div className="flex items-center gap-3 text-zinc-950 dark:text-zinc-50">
+                    <div className="flex items-center gap-3">
                       <DollarSign className="h-4 w-4 text-zinc-400" />
                       <div>
                         <p className="text-xs text-zinc-500">Total Amount</p>
@@ -179,15 +179,19 @@ export function InvoiceDetailDialog({
                           <th className="px-3 py-2 font-medium text-right">Amount</th>
                         </tr>
                       </thead>
-                      <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800 text-zinc-950 dark:text-zinc-50">
-                        {invoice.line_items.map((item) => (
+                      <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800">
+                        {invoice.line_items?.map((item) => (
                           <tr key={item.id}>
                             <td className="px-3 py-2">{item.description}</td>
                             <td className="px-3 py-2 text-right font-mono">
                               {formatCurrency(item.amount, invoice.currency)}
                             </td>
                           </tr>
-                        ))}
+                        )) || (
+                          <tr>
+                            <td colSpan={2} className="px-3 py-2 text-center text-zinc-500 italic">No items.</td>
+                          </tr>
+                        )}
                       </tbody>
                     </table>
                   </div>
@@ -221,7 +225,7 @@ export function InvoiceDetailDialog({
               </div>
 
               {/* Right Column: Reminder Logs */}
-              <div className="space-y-6">
+              <div className="space-y-6 text-zinc-950 dark:text-zinc-50">
                 <div>
                   <h4 className="text-xs font-semibold uppercase tracking-wider text-zinc-500 mb-3">Reminder History</h4>
                   <div className="space-y-3">
@@ -231,7 +235,7 @@ export function InvoiceDetailDialog({
                       </p>
                     ) : (
                       invoice.reminder_logs.map((log) => (
-                        <div key={log.id} className="flex gap-3 items-start p-3 rounded-xl border border-zinc-100 dark:border-zinc-800 bg-white dark:bg-zinc-950 text-zinc-950 dark:text-zinc-50">
+                        <div key={log.id} className="flex gap-3 items-start p-3 rounded-xl border border-zinc-100 dark:border-zinc-800 bg-white dark:bg-zinc-950">
                           <div className="h-8 w-8 rounded-full bg-indigo-50 dark:bg-indigo-900/20 flex items-center justify-center shrink-0">
                             <Mail className="h-4 w-4 text-indigo-600" />
                           </div>
@@ -252,7 +256,7 @@ export function InvoiceDetailDialog({
                   <h4 className="text-xs font-semibold uppercase tracking-wider text-zinc-500 mb-3">Upcoming Schedule</h4>
                   <div className="space-y-2">
                     {invoice.reminder_schedule?.filter(s => s.status === "pending").map((item) => (
-                      <div key={item.id} className="flex items-center justify-between p-2 px-3 rounded-lg bg-zinc-50 dark:bg-zinc-900/40 text-xs text-zinc-950 dark:text-zinc-50">
+                      <div key={item.id} className="flex items-center justify-between p-2 px-3 rounded-lg bg-zinc-50 dark:bg-zinc-900/40 text-xs">
                         <div className="flex items-center gap-2">
                           <Calendar className="h-3.5 w-3.5 text-zinc-400" />
                           <span>{formatDate(item.scheduled_for)}</span>
