@@ -2,22 +2,31 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { 
+  Mail, 
   Send, 
   Calendar, 
+  User, 
+  DollarSign,
   AlertCircle,
   Trash2,
   ReceiptText,
   Clock,
-  CheckCircle2
+  CheckCircle2,
+  History,
+  ListOrdered,
+  Info
 } from "lucide-react";
 import {
   Dialog,
   DialogContent,
+  DialogHeader,
   DialogTitle,
-  DialogFooter,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { StatusBadge, ToneBadge } from "@/components/ui/badge";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Separator } from "@/components/ui/separator";
 import type { Invoice } from "@/types";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import { useRouter } from "next/navigation";
@@ -107,177 +116,213 @@ export function InvoiceDetailDialog({
   return (
     <>
       <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="max-w-4xl max-h-[95vh] overflow-hidden flex flex-col p-0 border-none shadow-2xl">
-          {/* Header Section */}
-          <div className="bg-zinc-950 p-6 text-white shrink-0">
+        <DialogContent className="max-w-2xl max-h-[85vh] overflow-hidden flex flex-col p-0 gap-0">
+          {/* Top Info Bar */}
+          <div className="bg-zinc-50 dark:bg-zinc-900/50 p-6 border-b">
             <div className="flex items-center justify-between gap-4">
               <div className="flex items-center gap-4">
-                <div className="h-12 w-12 rounded-xl bg-indigo-500/20 flex items-center justify-center border border-indigo-500/30">
-                  <ReceiptText className="h-6 w-6 text-indigo-400" />
+                <div className="h-10 w-10 rounded-lg bg-indigo-600 flex items-center justify-center shadow-lg shadow-indigo-500/20">
+                  <ReceiptText className="h-5 w-5 text-white" />
                 </div>
                 <div>
-                  <DialogTitle className="text-2xl font-bold tracking-tight">
+                  <DialogTitle className="text-lg font-bold tracking-tight">
                     {invoice?.invoice_number || "Invoice"}
                   </DialogTitle>
-                  <p className="text-zinc-400 text-sm font-medium mt-0.5">{invoice?.description || "Loading description..."}</p>
+                  <p className="text-zinc-500 text-xs font-medium">{invoice?.description || "Invoice details"}</p>
                 </div>
               </div>
-              <div className="pr-8">
+              <div className="flex items-center gap-3 pr-8">
                 {invoice && <StatusBadge status={invoice.status} />}
               </div>
             </div>
           </div>
 
-          <div className="flex-1 overflow-y-auto p-6 space-y-8 bg-white dark:bg-zinc-950">
+          <div className="flex-1 overflow-hidden flex flex-col bg-white dark:bg-zinc-950">
             {loading ? (
               <div className="py-24 text-center">
-                <div className="inline-block h-8 w-8 animate-spin rounded-full border-4 border-solid border-indigo-600 border-r-transparent" />
-                <p className="mt-4 text-sm font-medium text-zinc-500">Retrieving secure data...</p>
+                <div className="inline-block h-6 w-6 animate-spin rounded-full border-3 border-solid border-indigo-600 border-r-transparent" />
+                <p className="mt-4 text-xs font-medium text-zinc-500">Loading details...</p>
               </div>
             ) : error ? (
-              <div className="py-12 text-center">
-                <AlertCircle className="mx-auto h-12 w-12 text-red-500 mb-4 opacity-50" />
+              <div className="py-12 text-center p-6">
+                <AlertCircle className="mx-auto h-10 w-10 text-red-500 mb-4 opacity-50" />
                 <p className="text-zinc-900 dark:text-zinc-50 font-semibold">{error}</p>
                 <Button variant="outline" size="sm" className="mt-4" onClick={fetchInvoice}>Try again</Button>
               </div>
             ) : invoice ? (
-              <div className="grid gap-10 lg:grid-cols-5">
-                {/* Main Content Area */}
-                <div className="lg:col-span-3 space-y-8">
-                  {/* Stats Grid */}
-                  <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-                    <div className="p-4 rounded-2xl bg-zinc-50 dark:bg-zinc-900/40 border border-zinc-100 dark:border-zinc-800">
-                      <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-1">Total</p>
-                      <p className="text-lg font-bold font-mono text-zinc-900 dark:text-zinc-50">{formatCurrency(invoice.total_amount, invoice.currency)}</p>
-                    </div>
-                    <div className="p-4 rounded-2xl bg-zinc-50 dark:bg-zinc-900/40 border border-zinc-100 dark:border-zinc-800">
-                      <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-1">Client</p>
-                      <p className="text-sm font-bold truncate">{invoice.client?.name}</p>
-                    </div>
-                    <div className="p-4 rounded-2xl bg-zinc-50 dark:bg-zinc-900/40 border border-zinc-100 dark:border-zinc-800">
-                      <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-1">Due Date</p>
-                      <p className="text-sm font-bold">{formatDate(invoice.due_date)}</p>
-                    </div>
-                    <div className="p-4 rounded-2xl bg-zinc-50 dark:bg-zinc-900/40 border border-zinc-100 dark:border-zinc-800">
-                      <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-1">Items</p>
-                      <p className="text-sm font-bold">{invoice.line_items?.length || 0}</p>
-                    </div>
-                  </div>
-
-                  {/* Actions Bar */}
-                  <div className="flex flex-wrap items-center gap-3 p-2 rounded-2xl bg-indigo-50/30 dark:bg-indigo-900/5 border border-indigo-100/50 dark:border-indigo-900/20">
-                    <Button 
-                      className="flex-1 h-11 font-bold rounded-xl shadow-lg shadow-indigo-500/10" 
-                      variant={invoice.status === "paid" ? "outline" : "accent"}
-                      onClick={() => updateStatus(invoice.status === "paid" ? "pending" : "paid")}
-                      disabled={updating}
+              <Tabs defaultValue="overview" className="flex-1 flex flex-col overflow-hidden">
+                <div className="px-6 border-b bg-zinc-50/50 dark:bg-zinc-900/20">
+                  <TabsList className="h-12 bg-transparent gap-6 p-0">
+                    <TabsTrigger 
+                      value="overview" 
+                      className="h-full rounded-none border-b-2 border-transparent data-[state=active]:border-indigo-600 data-[state=active]:bg-transparent shadow-none px-1"
                     >
-                      {invoice.status === "paid" ? <Clock className="mr-2 h-4 w-4" /> : <CheckCircle2 className="mr-2 h-4 w-4" />}
-                      {invoice.status === "paid" ? "Revert to Unpaid" : "Mark as Fully Paid"}
-                    </Button>
-                    <Button 
-                      variant="outline"
-                      className="h-11 px-6 font-bold rounded-xl bg-white dark:bg-zinc-900"
-                      onClick={() => setShowReminder(true)}
+                      <Info className="h-4 w-4 mr-2" />
+                      Overview
+                    </TabsTrigger>
+                    <TabsTrigger 
+                      value="items"
+                      className="h-full rounded-none border-b-2 border-transparent data-[state=active]:border-indigo-600 data-[state=active]:bg-transparent shadow-none px-1"
                     >
-                      <Send className="h-4 w-4 mr-2" />
-                      Remind
-                    </Button>
-                    <Button 
-                      variant="destructive"
-                      size="icon"
-                      className="h-11 w-11 rounded-xl bg-red-50 text-red-600 hover:bg-red-100 dark:bg-red-950/20 dark:text-red-400"
-                      onClick={() => setShowDelete(true)}
-                      disabled={updating}
+                      <ListOrdered className="h-4 w-4 mr-2" />
+                      Line Items
+                    </TabsTrigger>
+                    <TabsTrigger 
+                      value="activity"
+                      className="h-full rounded-none border-b-2 border-transparent data-[state=active]:border-indigo-600 data-[state=active]:bg-transparent shadow-none px-1"
                     >
-                      <Trash2 className="h-5 w-5" />
-                    </Button>
-                  </div>
-
-                  {/* Items Table */}
-                  <div>
-                    <h4 className="text-[11px] font-bold uppercase tracking-[0.2em] text-zinc-400 mb-4 px-1">Detailed Breakdown</h4>
-                    <div className="overflow-hidden rounded-2xl border border-zinc-100 dark:border-zinc-800 shadow-sm bg-zinc-50/10 dark:bg-zinc-900/5">
-                      <table className="w-full text-sm text-zinc-900 dark:text-zinc-50">
-                        <thead>
-                          <tr className="bg-zinc-100/50 dark:bg-zinc-900/50">
-                            <th className="px-5 py-3 text-left text-[10px] font-bold uppercase tracking-widest text-zinc-400">Description</th>
-                            <th className="px-5 py-3 text-right text-[10px] font-bold uppercase tracking-widest text-zinc-400">Amount</th>
-                          </tr>
-                        </thead>
-                        <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800">
-                          {invoice.line_items?.map((item) => (
-                            <tr key={item.id}>
-                              <td className="px-5 py-4 font-medium">{item.description}</td>
-                              <td className="px-5 py-4 text-right font-mono font-bold">{formatCurrency(item.amount, invoice.currency)}</td>
-                            </tr>
-                          ))}
-                        </tbody>
-                      </table>
-                    </div>
-                  </div>
+                      <History className="h-4 w-4 mr-2" />
+                      Activity
+                    </TabsTrigger>
+                  </TabsList>
                 </div>
 
-                {/* Sidebar area: Reminders & Schedule */}
-                <div className="lg:col-span-2 space-y-8">
-                  {/* Timeline section */}
-                  <div>
-                    <h4 className="text-[11px] font-bold uppercase tracking-[0.2em] text-zinc-400 mb-5 px-1">Activity Log</h4>
-                    <div className="relative pl-6 space-y-6 before:absolute before:left-2 before:top-2 before:bottom-2 before:w-px before:bg-zinc-100 dark:before:bg-zinc-800">
-                      {!invoice.reminder_logs?.length ? (
-                        <div className="text-center py-6 bg-zinc-50/50 dark:bg-zinc-900/20 rounded-2xl border-2 border-dashed border-zinc-100 dark:border-zinc-800">
-                          <p className="text-xs text-zinc-400 font-medium italic">No activity recorded</p>
+                <div className="flex-1 overflow-hidden">
+                  {/* Overview Tab */}
+                  <TabsContent value="overview" className="m-0 h-full p-6 space-y-8 overflow-y-auto">
+                    <div className="grid grid-cols-2 gap-4 sm:grid-cols-3">
+                      <div className="space-y-1">
+                        <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Total Amount</p>
+                        <p className="text-xl font-bold font-mono text-indigo-600 dark:text-indigo-400">
+                          {formatCurrency(invoice.total_amount, invoice.currency)}
+                        </p>
+                      </div>
+                      <div className="space-y-1">
+                        <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Client</p>
+                        <p className="text-sm font-semibold truncate">{invoice.client?.name}</p>
+                      </div>
+                      <div className="space-y-1">
+                        <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Due Date</p>
+                        <p className="text-sm font-semibold">{formatDate(invoice.due_date)}</p>
+                      </div>
+                    </div>
+
+                    <Separator />
+
+                    <div className="space-y-4">
+                      <h4 className="text-xs font-bold uppercase tracking-wider text-zinc-400">Primary Actions</h4>
+                      <div className="flex flex-wrap gap-3">
+                        <Button 
+                          className="flex-1 h-10 font-bold" 
+                          variant={invoice.status === "paid" ? "outline" : "accent"}
+                          onClick={() => updateStatus(invoice.status === "paid" ? "pending" : "paid")}
+                          disabled={updating}
+                        >
+                          {invoice.status === "paid" ? <Clock className="mr-2 h-4 w-4" /> : <CheckCircle2 className="mr-2 h-4 w-4" />}
+                          {invoice.status === "paid" ? "Unmark as Paid" : "Mark as Paid"}
+                        </Button>
+                        <Button 
+                          variant="outline"
+                          className="flex-1 h-10 font-bold"
+                          onClick={() => setShowReminder(true)}
+                        >
+                          <Send className="h-4 w-4 mr-2" />
+                          Remind
+                        </Button>
+                        <Button 
+                          variant="destructive"
+                          size="icon"
+                          className="h-10 w-10 shrink-0"
+                          onClick={() => setShowDelete(true)}
+                          disabled={updating}
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
+
+                    <div className="p-4 rounded-xl bg-indigo-50/50 dark:bg-indigo-950/10 border border-indigo-100 dark:border-indigo-900/30">
+                      <p className="text-xs font-medium text-indigo-700 dark:text-indigo-400 leading-relaxed">
+                        This invoice is currently in <strong>{invoice.status}</strong> status. Automated reminders will 
+                        {invoice.status === "paid" ? " no longer " : " continue to "} fire based on the schedule.
+                      </p>
+                    </div>
+                  </TabsContent>
+
+                  {/* Items Tab */}
+                  <TabsContent value="items" className="m-0 h-full overflow-hidden flex flex-col">
+                    <ScrollArea className="flex-1">
+                      <div className="p-6">
+                        <div className="overflow-hidden rounded-xl border">
+                          <table className="w-full text-sm">
+                            <thead className="bg-zinc-50 dark:bg-zinc-900/50 text-zinc-500">
+                              <tr>
+                                <th className="px-4 py-3 text-left font-bold text-[10px] uppercase tracking-widest">Description</th>
+                                <th className="px-4 py-3 text-right font-bold text-[10px] uppercase tracking-widest">Amount</th>
+                              </tr>
+                            </thead>
+                            <tbody className="divide-y">
+                              {invoice.line_items?.map((item) => (
+                                <tr key={item.id}>
+                                  <td className="px-4 py-4 font-medium text-zinc-900 dark:text-zinc-50">{item.description}</td>
+                                  <td className="px-4 py-4 text-right font-mono font-bold text-zinc-900 dark:text-zinc-50">{formatCurrency(item.amount, invoice.currency)}</td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
                         </div>
-                      ) : (
-                        invoice.reminder_logs.map((log) => (
-                          <div key={log.id} className="relative">
-                            <div className="absolute -left-[22px] top-1 h-3 w-3 rounded-full bg-indigo-500 border-2 border-white dark:border-zinc-950 shadow-sm" />
-                            <div className="p-3.5 rounded-2xl bg-zinc-50 dark:bg-zinc-900/40 border border-zinc-100 dark:border-zinc-800 flex items-center justify-between gap-2">
-                              <div className="min-w-0">
-                                <p className="text-sm font-bold text-zinc-900 dark:text-zinc-50 tracking-tight">Reminder Sent</p>
-                                <p className="text-[10px] font-bold text-zinc-400 mt-0.5">{formatDate(log.sent_at)}</p>
+                      </div>
+                    </ScrollArea>
+                  </TabsContent>
+
+                  {/* Activity Tab */}
+                  <TabsContent value="activity" className="m-0 h-full overflow-hidden flex flex-col">
+                    <ScrollArea className="flex-1">
+                      <div className="p-6 space-y-8">
+                        <div>
+                          <h4 className="text-[10px] font-bold uppercase tracking-widest text-zinc-400 mb-4 px-1">Reminder History</h4>
+                          {!invoice.reminder_logs?.length ? (
+                            <p className="text-sm text-zinc-500 italic py-6 text-center border-2 border-dashed rounded-xl">No reminders sent yet.</p>
+                          ) : (
+                            <div className="space-y-3">
+                              {invoice.reminder_logs.map((log) => (
+                                <div key={log.id} className="flex gap-4 items-center p-3 rounded-xl border bg-white dark:bg-zinc-900/50">
+                                  <div className="h-8 w-8 rounded-full bg-indigo-50 dark:bg-indigo-900/20 flex items-center justify-center shrink-0 border border-indigo-100/50 dark:border-indigo-800/30">
+                                    <Mail className="h-4 w-4 text-indigo-600 dark:text-indigo-400" />
+                                  </div>
+                                  <div className="flex-1 min-w-0">
+                                    <div className="flex items-center justify-between gap-2">
+                                      <p className="text-sm font-bold text-zinc-900 dark:text-zinc-50">Reminder Sent</p>
+                                      <ToneBadge tone={log.tone} />
+                                    </div>
+                                    <p className="text-[10px] font-bold text-zinc-400">{formatDate(log.sent_at)}</p>
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+
+                        <div>
+                          <h4 className="text-[10px] font-bold uppercase tracking-widest text-zinc-400 mb-4 px-1">Smart Schedule</h4>
+                          <div className="space-y-2">
+                            {invoice.reminder_schedule?.filter(s => s.status === "pending").map((item) => (
+                              <div key={item.id} className="flex items-center justify-between p-3 rounded-xl bg-zinc-50 dark:bg-zinc-900/30 border border-zinc-100 dark:border-zinc-800">
+                                <div className="flex items-center gap-3">
+                                  <Calendar className="h-3.5 w-3.5 text-zinc-400" />
+                                  <span className="text-xs font-bold text-zinc-900 dark:text-zinc-50">{formatDate(item.scheduled_for)}</span>
+                                </div>
+                                <ToneBadge tone={item.tone} />
                               </div>
-                              <ToneBadge tone={log.tone} />
-                            </div>
+                            ))}
+                            {!invoice.reminder_schedule?.some(s => s.status === "pending") && (
+                              <p className="text-xs text-zinc-500 italic py-4 text-center border rounded-xl">No pending reminders.</p>
+                            )}
                           </div>
-                        ))
-                      )}
-                    </div>
-                  </div>
-
-                  {/* Upcoming section */}
-                  <div>
-                    <h4 className="text-[11px] font-bold uppercase tracking-[0.2em] text-zinc-400 mb-4 px-1">Smart Schedule</h4>
-                    <div className="space-y-2 p-1">
-                      {invoice.reminder_schedule?.filter(s => s.status === "pending").map((item) => (
-                        <div key={item.id} className="group flex items-center justify-between p-3 rounded-xl bg-zinc-50 dark:bg-zinc-900/40 border border-transparent hover:border-indigo-500/20 transition-all cursor-default">
-                          <div className="flex items-center gap-3">
-                            <div className="p-1.5 rounded-lg bg-white dark:bg-zinc-800 shadow-sm text-zinc-400 group-hover:text-indigo-500 transition-colors">
-                              <Calendar className="h-3.5 w-3.5" />
-                            </div>
-                            <span className="text-xs font-bold text-zinc-900 dark:text-zinc-50">{formatDate(item.scheduled_for)}</span>
-                          </div>
-                          <ToneBadge tone={item.tone} />
                         </div>
-                      ))}
-                      {!invoice.reminder_schedule?.some(s => s.status === "pending") && (
-                        <div className="p-4 text-center rounded-2xl bg-zinc-50 dark:bg-zinc-900/20 border border-zinc-100 dark:border-zinc-800">
-                          <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">No pending runs</p>
-                        </div>
-                      )}
-                    </div>
-                  </div>
+                      </div>
+                    </ScrollArea>
+                  </TabsContent>
                 </div>
-              </div>
+              </Tabs>
             ) : null}
           </div>
 
-          <DialogFooter className="p-4 bg-zinc-50/50 dark:bg-zinc-900/20 border-t border-zinc-100 dark:border-zinc-800 flex items-center justify-between sm:justify-between">
-            <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-[0.1em] hidden sm:block">Duely Secure View v1.2</p>
-            <Button variant="ghost" className="font-bold tracking-tight h-9 rounded-lg" onClick={() => onOpenChange(false)}>
-              Dismiss Details
+          <div className="p-4 bg-zinc-50 dark:bg-zinc-900/50 border-t flex justify-end">
+            <Button variant="ghost" size="sm" className="font-bold text-[10px] uppercase tracking-widest" onClick={() => onOpenChange(false)}>
+              Close
             </Button>
-          </DialogFooter>
+          </div>
         </DialogContent>
       </Dialog>
 
