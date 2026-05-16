@@ -17,19 +17,37 @@ export default function SignupPage() {
       <form action={formAction} className="mt-6 space-y-4">
         <label className="grid gap-1.5 text-sm font-medium text-zinc-700 dark:text-zinc-300">
           Business name
-          <input name="business_name" defaultValue="Dubey Studio" className="h-9 rounded-lg border border-zinc-200 dark:border-zinc-800 px-3 text-sm outline-none focus:border-indigo-500" />
+          <input 
+            name="business_name" 
+            placeholder="Acme Studio"
+            className="h-9 rounded-lg border border-zinc-200 dark:border-zinc-800 px-3 text-sm outline-none focus:border-indigo-500" 
+          />
         </label>
         <label className="grid gap-1.5 text-sm font-medium text-zinc-700 dark:text-zinc-300">
           Full name
-          <input name="full_name" defaultValue="Siddhant Dubey" className="h-9 rounded-lg border border-zinc-200 dark:border-zinc-800 px-3 text-sm outline-none focus:border-indigo-500" />
+          <input 
+            name="full_name" 
+            placeholder="John Doe"
+            className="h-9 rounded-lg border border-zinc-200 dark:border-zinc-800 px-3 text-sm outline-none focus:border-indigo-500" 
+          />
         </label>
         <label className="grid gap-1.5 text-sm font-medium text-zinc-700 dark:text-zinc-300">
           Email
-          <input name="email" type="email" defaultValue="demo@duely.tech" className="h-9 rounded-lg border border-zinc-200 dark:border-zinc-800 px-3 text-sm outline-none focus:border-indigo-500" />
+          <input 
+            name="email" 
+            type="email" 
+            placeholder="john@example.com"
+            className="h-9 rounded-lg border border-zinc-200 dark:border-zinc-800 px-3 text-sm outline-none focus:border-indigo-500" 
+          />
         </label>
         <label className="grid gap-1.5 text-sm font-medium text-zinc-700 dark:text-zinc-300">
           Password
-          <input name="password" type="password" defaultValue="Duely@2025" className="h-9 rounded-lg border border-zinc-200 dark:border-zinc-800 px-3 text-sm outline-none focus:border-indigo-500" />
+          <input 
+            name="password" 
+            type="password" 
+            placeholder="••••••••"
+            className="h-9 rounded-lg border border-zinc-200 dark:border-zinc-800 px-3 text-sm outline-none focus:border-indigo-500" 
+          />
         </label>
         {state?.error ? <p className="text-sm text-red-600">{state.error}</p> : null}
         <Button type="submit" variant="accent" className="w-full" disabled={pending}>

@@ -1,11 +1,14 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, Suspense } from "react";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { loginAction } from "@/app/(auth)/actions";
 import { Button } from "@/components/ui/button";
 
-export default function LoginPage() {
+function LoginForm() {
+  const searchParams = useSearchParams();
+  const isDemo = searchParams.get("demo") === "true";
   const [state, formAction, pending] = useActionState(loginAction, null);
 
   return (
@@ -20,7 +23,8 @@ export default function LoginPage() {
           <input
             name="email"
             type="email"
-            defaultValue="demo@duely.tech"
+            defaultValue={isDemo ? "demo@duely.tech" : ""}
+            placeholder="john@example.com"
             className="h-9 rounded-lg border border-zinc-200 dark:border-zinc-800 px-3 text-sm outline-none focus:border-indigo-500"
           />
         </label>
@@ -29,7 +33,8 @@ export default function LoginPage() {
           <input
             name="password"
             type="password"
-            defaultValue="Duely@2025"
+            defaultValue={isDemo ? "Duely@2025" : ""}
+            placeholder="••••••••"
             className="h-9 rounded-lg border border-zinc-200 dark:border-zinc-800 px-3 text-sm outline-none focus:border-indigo-500"
           />
         </label>
@@ -52,5 +57,13 @@ export default function LoginPage() {
         </Link>
       </p>
     </div>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<div className="h-[400px] w-full max-w-sm animate-pulse rounded-xl bg-zinc-100 dark:bg-zinc-900" />}>
+      <LoginForm />
+    </Suspense>
   );
 }

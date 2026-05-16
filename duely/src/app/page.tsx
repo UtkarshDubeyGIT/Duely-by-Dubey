@@ -99,7 +99,7 @@ export default function LandingPage() {
                 Start for free
               </ButtonLink>
               <ButtonLink
-                href="/login"
+                href="/login?demo=true"
                 variant="secondary"
                 className="rounded-full border border-[#d6d7db] bg-white dark:bg-zinc-950 px-8 py-4 text-base font-medium text-[#181c22] dark:text-zinc-50 hover:bg-[#f3f3f4] dark:bg-zinc-900"
               >
@@ -223,7 +223,7 @@ export default function LandingPage() {
                 follow-up while the thread is still warm.
               </p>
               <ButtonLink
-                href="/login"
+                href="/login?demo=true"
                 className="w-full rounded-lg bg-[#4b39e6] px-4 py-2.5 text-sm font-medium text-white hover:bg-[#3d2ecc]"
               >
                 Send Follow-up Now
