@@ -1,8 +1,16 @@
 "use client";
 
 import { useState } from "react";
-import { Plus, X } from "lucide-react";
+import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogFooter,
+} from "@/components/ui/dialog";
 
 export function CreateClientDialog() {
   const [open, setOpen] = useState(false);
@@ -18,61 +26,86 @@ export function CreateClientDialog() {
       company: String(formData.get("company") || ""),
     };
 
-    const response = await fetch("/api/clients", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    });
+    try {
+      const response = await fetch("/api/clients", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
 
-    if (!response.ok) {
-      const body = await response.json().catch(() => null);
-      setError(body?.error ?? "Client could not be created.");
+      if (!response.ok) {
+        const body = await response.json().catch(() => null);
+        setError(body?.error ?? "Client could not be created.");
+        setLoading(false);
+        return;
+      }
+
+      window.location.reload();
+    } catch {
+      setError("An unexpected error occurred.");
       setLoading(false);
-      return;
     }
-
-    window.location.reload();
   }
 
   return (
-    <>
-      <Button variant="accent" onClick={() => setOpen(true)}>
-        <Plus className="h-4 w-4 mr-2" />
-        New Client
-      </Button>
-      {open ? (
-        <div className="fixed inset-0 z-50 flex items-end bg-black/50 p-0 sm:items-center sm:justify-center sm:p-4">
-          <div className="w-full rounded-t-2xl bg-white dark:bg-zinc-950 sm:max-w-md sm:rounded-2xl">
-            <div className="flex items-center justify-between border-b border-zinc-200 dark:border-zinc-800 p-5">
-              <h3 className="text-lg font-semibold text-zinc-950 dark:text-zinc-50">Create Client</h3>
-              <button className="rounded-lg p-2 text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:bg-zinc-800" onClick={() => setOpen(false)} aria-label="Close">
-                <X className="h-4 w-4" />
-              </button>
-            </div>
-            <form action={onSubmit} className="grid gap-4 p-5">
-              <label className="grid gap-1.5 text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                Name
-                <input name="name" required placeholder="John Doe" className="h-9 rounded-lg border border-zinc-200 dark:border-zinc-800 px-3 text-sm outline-none focus:border-indigo-500" />
-              </label>
-              <label className="grid gap-1.5 text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                Email
-                <input name="email" type="email" required placeholder="john@example.com" className="h-9 rounded-lg border border-zinc-200 dark:border-zinc-800 px-3 text-sm outline-none focus:border-indigo-500" />
-              </label>
-              <label className="grid gap-1.5 text-sm font-medium text-zinc-700 dark:text-zinc-300">
-                Company (Optional)
-                <input name="company" placeholder="Acme Inc." className="h-9 rounded-lg border border-zinc-200 dark:border-zinc-800 px-3 text-sm outline-none focus:border-indigo-500" />
-              </label>
-              
-              {error ? <p className="text-sm text-red-600">{error}</p> : null}
-              
-              <div className="flex justify-end gap-2 border-t border-zinc-200 dark:border-zinc-800 pt-4 mt-2">
-                <Button type="button" variant="ghost" onClick={() => setOpen(false)}>Cancel</Button>
-                <Button type="submit" variant="accent" disabled={loading}>{loading ? "Creating..." : "Create client"}</Button>
-              </div>
-            </form>
-          </div>
-        </div>
-      ) : null}
-    </>
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger
+        render={
+          <Button variant="accent">
+            <Plus className="h-4 w-4 mr-2" />
+            New Client
+          </Button>
+        }
+      />
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Create Client</DialogTitle>
+        </DialogHeader>
+        <form action={onSubmit} className="grid gap-4 pt-2">
+          <label className="grid gap-1.5 text-sm font-medium text-zinc-700 dark:text-zinc-300">
+            Name
+            <input
+              name="name"
+              required
+              placeholder="John Doe"
+              className="h-9 rounded-lg border border-zinc-200 dark:border-zinc-800 px-3 text-sm outline-none focus:border-indigo-500"
+            />
+          </label>
+          <label className="grid gap-1.5 text-sm font-medium text-zinc-700 dark:text-zinc-300">
+            Email
+            <input
+              name="email"
+              type="email"
+              required
+              placeholder="john@example.com"
+              className="h-9 rounded-lg border border-zinc-200 dark:border-zinc-800 px-3 text-sm outline-none focus:border-indigo-500"
+            />
+          </label>
+          <label className="grid gap-1.5 text-sm font-medium text-zinc-700 dark:text-zinc-300">
+            Company (Optional)
+            <input
+              name="company"
+              placeholder="Acme Inc."
+              className="h-9 rounded-lg border border-zinc-200 dark:border-zinc-800 px-3 text-sm outline-none focus:border-indigo-500"
+            />
+          </label>
+
+          {error ? <p className="text-sm text-red-600">{error}</p> : null}
+
+          <DialogFooter>
+            <Button
+              type="button"
+              variant="ghost"
+              onClick={() => setOpen(false)}
+            >
+              Cancel
+            </Button>
+            <Button type="submit" variant="accent" disabled={loading}>
+              {loading ? "Creating..." : "Create client"}
+            </Button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
   );
 }
