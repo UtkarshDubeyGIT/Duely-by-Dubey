@@ -6,8 +6,6 @@ import {
   Bell,
   FileText,
   LayoutDashboard,
-  LogOut,
-  Settings,
   Users,
 } from "lucide-react";
 import { BrandLogoLink } from "@/components/shared/BrandLogoLink";
@@ -65,22 +63,9 @@ export function Sidebar() {
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter className="border-t border-sidebar-border p-3">
-        <SidebarMenu>
-          <SidebarMenuItem>
-            <SidebarMenuButton render={<button />}>
-              <Settings className="h-4 w-4" />
-              <span>Settings</span>
-            </SidebarMenuButton>
-          </SidebarMenuItem>
-          <SidebarMenuItem>
-            <form action="/api/auth/signout" method="post" className="w-full">
-              <SidebarMenuButton render={<button type="submit" />}>
-                <LogOut className="h-4 w-4" />
-                <span>Sign out</span>
-              </SidebarMenuButton>
-            </form>
-          </SidebarMenuItem>
-        </SidebarMenu>
+        <p className="text-[10px] text-center text-muted-foreground uppercase tracking-widest font-semibold">
+          Duely v0.1.0
+        </p>
       </SidebarFooter>
     </ShadcnSidebar>
   );

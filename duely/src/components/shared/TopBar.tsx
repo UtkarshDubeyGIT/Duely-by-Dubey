@@ -2,8 +2,8 @@
 
 import { Bell, Search } from "lucide-react";
 import { usePathname } from "next/navigation";
-import { getInitials } from "@/lib/utils";
 import { ModeToggle } from "@/components/shared/ModeToggle";
+import { UserNav } from "@/components/shared/UserNav";
 
 export function TopBar() {
   const pathname = usePathname();
@@ -33,9 +33,7 @@ export function TopBar() {
         >
           <Bell className="h-4 w-4" />
         </button>
-        <div className="flex h-9 w-9 items-center justify-center rounded-full bg-sidebar-primary text-xs font-semibold text-sidebar-primary-foreground">
-          {getInitials("Dubey Studio")}
-        </div>
+        <UserNav />
       </div>
     </header>
   );
