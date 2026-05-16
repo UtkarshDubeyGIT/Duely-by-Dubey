@@ -104,8 +104,6 @@ export function InvoiceDetailDialog({
     }
   };
 
-  if (!open) return null;
-
   return (
     <>
       <Dialog open={open} onOpenChange={onOpenChange}>

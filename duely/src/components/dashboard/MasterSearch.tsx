@@ -43,9 +43,12 @@ export function MasterSearch() {
   }, [open]);
 
   const handleSelect = (id: string) => {
-    setSelectedInvoiceId(id);
     setOpen(false);
-    setDetailOpen(true);
+    setSelectedInvoiceId(id);
+    // Delay opening the detail dialog to let the search dialog close smoothly
+    setTimeout(() => {
+      setDetailOpen(true);
+    }, 150);
   };
 
   if (!mounted) return (
