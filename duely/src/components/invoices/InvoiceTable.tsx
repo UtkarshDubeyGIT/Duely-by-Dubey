@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import { Search } from "lucide-react";
 import type { Client, Invoice } from "@/types";
 import { CreateInvoiceDialog } from "@/components/invoices/CreateInvoiceDialog";
@@ -22,12 +22,20 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { formatCurrency, formatDate } from "@/lib/utils";
-
 import { InvoiceActions } from "@/components/invoices/InvoiceActions";
+import { useSearchParams } from "next/navigation";
+import { InvoiceDetailDialog } from "@/components/dashboard/InvoiceDetailDialog";
 
 export function InvoiceTable({ invoices, clients }: { invoices: Invoice[]; clients: Client[] }) {
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState("all");
+  const searchParams = useSearchParams();
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+
+  useEffect(() => {
+    const id = searchParams.get("id");
+    if (id) setSelectedId(id);
+  }, [searchParams]);
 
   const filtered = useMemo(() => {
     return invoices.filter((invoice) => {
@@ -137,6 +145,15 @@ export function InvoiceTable({ invoices, clients }: { invoices: Invoice[]; clien
           )}
         </div>
       </div>
+
+      {selectedId && (
+        <InvoiceDetailDialog
+          key={selectedId}
+          invoiceId={selectedId}
+          open={!!selectedId}
+          onOpenChange={(open) => !open && setSelectedId(null)}
+        />
+      )}
     </div>
   );
 }

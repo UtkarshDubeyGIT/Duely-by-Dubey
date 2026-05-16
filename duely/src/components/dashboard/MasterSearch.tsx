@@ -13,14 +13,13 @@ import {
 import type { Invoice } from "@/types";
 import { formatCurrency } from "@/lib/utils";
 import { StatusBadge } from "@/components/ui/badge";
-import { InvoiceDetailDialog } from "@/components/dashboard/InvoiceDetailDialog";
+import { useRouter } from "next/navigation";
 
 export function MasterSearch() {
   const [mounted, setMounted] = useState(false);
   const [open, setOpen] = useState(false);
   const [invoices, setInvoices] = useState<Invoice[]>([]);
-  const [selectedInvoiceId, setSelectedInvoiceId] = useState<string | null>(null);
-  const [detailOpen, setDetailOpen] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     setMounted(true);
@@ -43,17 +42,10 @@ export function MasterSearch() {
   }, [open]);
 
   const handleSelect = (id: string) => {
-    // Wrap in setTimeout to let CMDK finish its event processing before we unmount it
-    setTimeout(() => {
-      setOpen(false);
-      
-      // Delay opening the detail dialog until the search dialog has started closing
-      // to avoid focus management conflicts between Base UI dialogs.
-      setTimeout(() => {
-        setSelectedInvoiceId(id);
-        setDetailOpen(true);
-      }, 150);
-    }, 0);
+    setOpen(false);
+    // Navigate to the invoice page instead of opening a dialog to avoid production crashes
+    // This is a more robust pattern for Next.js 16/Turbopack
+    router.push(`/invoices?id=${id}`);
   };
 
   if (!mounted) return (
@@ -86,10 +78,6 @@ export function MasterSearch() {
                 key={invoice.id}
                 value={`${invoice.invoice_number} ${invoice.client?.name} ${invoice.status} ${invoice.description} ${invoice.issued_date} ${invoice.total_amount}`}
                 onSelect={() => handleSelect(invoice.id)}
-                onPointerDown={(e) => {
-                  e.preventDefault();
-                  handleSelect(invoice.id);
-                }}
                 className="flex items-center justify-between py-3 cursor-pointer"
               >
                 <div className="flex flex-col gap-0.5">
@@ -109,15 +97,6 @@ export function MasterSearch() {
           </CommandGroup>
         </CommandList>
       </CommandDialog>
-
-      {selectedInvoiceId && (
-        <InvoiceDetailDialog
-          key={selectedInvoiceId}
-          invoiceId={selectedInvoiceId}
-          open={detailOpen}
-          onOpenChange={setDetailOpen}
-        />
-      )}
     </>
   );
 }
