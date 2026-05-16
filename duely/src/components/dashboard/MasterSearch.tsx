@@ -43,12 +43,17 @@ export function MasterSearch() {
   }, [open]);
 
   const handleSelect = (id: string) => {
-    setOpen(false);
-    // Delay opening the detail dialog to let the search dialog close fully
+    // Wrap in setTimeout to let CMDK finish its event processing before we unmount it
     setTimeout(() => {
-      setSelectedInvoiceId(id);
-      setDetailOpen(true);
-    }, 300);
+      setOpen(false);
+      
+      // Delay opening the detail dialog until the search dialog has started closing
+      // to avoid focus management conflicts between Base UI dialogs.
+      setTimeout(() => {
+        setSelectedInvoiceId(id);
+        setDetailOpen(true);
+      }, 150);
+    }, 0);
   };
 
   if (!mounted) return (
@@ -81,6 +86,10 @@ export function MasterSearch() {
                 key={invoice.id}
                 value={`${invoice.invoice_number} ${invoice.client?.name} ${invoice.status} ${invoice.description} ${invoice.issued_date} ${invoice.total_amount}`}
                 onSelect={() => handleSelect(invoice.id)}
+                onPointerDown={(e) => {
+                  e.preventDefault();
+                  handleSelect(invoice.id);
+                }}
                 className="flex items-center justify-between py-3 cursor-pointer"
               >
                 <div className="flex flex-col gap-0.5">
