@@ -1,3 +1,4 @@
+<img width="2172" height="511" alt="github-banner-final" src="https://github.com/user-attachments/assets/58799abf-1013-439b-b058-445382f9724f" />
 # Duely — Smart Payment Reminders for Small Businesses
 
 > **Duely by Dubey** — Built for the Binary-Automates Software Engineering Internship
