@@ -73,7 +73,11 @@ export async function proxy(request: NextRequest) {
   const hasSession = getSessionFromCookies(request);
 
   // Redirect unauthenticated users away from protected routes
-  if (!hasSession && !isPublic && !request.nextUrl.pathname.startsWith("/api")) {
+  if (
+    !hasSession &&
+    !isPublic &&
+    !request.nextUrl.pathname.startsWith("/api")
+  ) {
     const url = request.nextUrl.clone();
     url.pathname = "/login";
     return NextResponse.redirect(url);
