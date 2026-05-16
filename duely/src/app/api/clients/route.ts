@@ -16,7 +16,7 @@ export async function POST(request: Request) {
 
   const supabase = await createClient();
   if (!supabase) {
-    return NextResponse.json({ data: { id: crypto.randomUUID(), ...parsed.data }, error: null }, { status: 201 });
+    return NextResponse.json({ data: null, error: "Database not configured" }, { status: 503 });
   }
 
   const { data: profile } = await supabase.from("profiles").select("org_id").single();
