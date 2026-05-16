@@ -11,7 +11,9 @@ export const metadata: Metadata = {
   description:
     "Smart payment reminders and invoice management for small teams.",
   icons: {
-    icon: "/deuly-dot-letter.png",
+    icon: "/favicon.ico",
+    shortcut: "/favicon.png",
+    apple: "/favicon.png",
   },
 };
 
