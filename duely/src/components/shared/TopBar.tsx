@@ -1,9 +1,10 @@
 "use client";
 
-import { Bell, Search } from "lucide-react";
+import { Bell } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { ModeToggle } from "@/components/shared/ModeToggle";
 import { UserNav } from "@/components/shared/UserNav";
+import { MasterSearch } from "@/components/dashboard/MasterSearch";
 
 export function TopBar() {
   const pathname = usePathname();
@@ -18,12 +19,8 @@ export function TopBar() {
           </h1>
         ) : null}
       </div>
-      <div className="hidden w-full max-w-md items-center gap-2 rounded-lg border border-sidebar-border bg-background px-3 py-2 md:flex">
-        <Search className="h-4 w-4 text-muted-foreground" />
-        <input
-          className="w-full border-0 bg-transparent text-sm text-foreground outline-none placeholder:text-muted-foreground"
-          placeholder="Search"
-        />
+      <div className="flex flex-1 max-w-md items-center px-2 md:px-0">
+        <MasterSearch />
       </div>
       <div className="flex items-center gap-3">
         <ModeToggle />

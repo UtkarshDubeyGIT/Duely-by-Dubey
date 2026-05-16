@@ -4,19 +4,47 @@ import { createClient } from "@/lib/supabase/server";
 
 export async function GET(_request: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const invoice = (await getInvoices()).find((item) => item.id === id);
-  return invoice
-    ? NextResponse.json({ data: invoice, error: null })
-    : NextResponse.json({ data: null, error: "Invoice not found" }, { status: 404 });
+  const supabase = await createClient();
+  if (!supabase) {
+    const invoice = (await getInvoices()).find((item) => item.id === id);
+    return invoice
+      ? NextResponse.json({ data: invoice, error: null })
+      : NextResponse.json({ data: null, error: "Invoice not found" }, { status: 404 });
+  }
+
+  const { data, error } = await supabase
+    .from("invoices")
+    .select(`
+      *,
+      client:clients(*),
+      reminder_logs(*),
+      reminder_schedule(*)
+    `)
+    .eq("id", id)
+    .single();
+
+  if (error) {
+    return NextResponse.json({ data: null, error: error.message }, { status: 500 });
+  }
+
+  // Sort logs and schedule
+  if (data.reminder_logs) {
+    data.reminder_logs.sort((a: { sent_at: string }, b: { sent_at: string }) => new Date(b.sent_at).getTime() - new Date(a.sent_at).getTime());
+  }
+  if (data.reminder_schedule) {
+    data.reminder_schedule.sort((a: { scheduled_for: string }, b: { scheduled_for: string }) => new Date(a.scheduled_for).getTime() - new Date(b.scheduled_for).getTime());
+  }
+
+  return NextResponse.json({ data, error: null });
 }
 
 export async function PATCH(request: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
   const body = await request.json();
   const supabase = await createClient();
-  
+
   if (!supabase) {
-    return NextResponse.json({ data: null, error: "Database not configured" }, { status: 503 });
+    return NextResponse.json({ data: { id, ...body }, error: null });
   }
 
   // Handle status-specific logic
@@ -31,7 +59,12 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
     .from("invoices")
     .update(updateData)
     .eq("id", id)
-    .select("*, client:clients(*)")
+    .select(`
+      *,
+      client:clients(*),
+      reminder_logs(*),
+      reminder_schedule(*)
+    `)
     .single();
 
   if (error) {

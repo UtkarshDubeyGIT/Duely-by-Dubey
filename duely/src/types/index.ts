@@ -73,6 +73,8 @@ export interface Invoice {
   created_at: string;
   updated_at: string;
   client?: Client;
+  reminder_logs?: ReminderLog[];
+  reminder_schedule?: ReminderSchedule[];
 }
 
 export interface ReminderLog {
