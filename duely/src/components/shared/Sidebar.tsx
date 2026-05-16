@@ -34,9 +34,9 @@ export function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <ShadcnSidebar variant="inset">
-      <SidebarHeader className="h-16 flex items-center justify-center border-b border-sidebar-border px-6">
-        <BrandLogoLink imageClassName="h-8 w-auto" />
+    <ShadcnSidebar>
+      <SidebarHeader className="h-20 flex items-center justify-center border-b border-sidebar-border px-6 py-2">
+        <BrandLogoLink imageClassName="h-16 w-auto" />
       </SidebarHeader>
       <SidebarContent>
         <SidebarGroup>

@@ -48,19 +48,19 @@ export function SendReminderDialog({ invoice, onClose }: { invoice: Invoice; onC
           <DialogTitle>Send reminder</DialogTitle>
         </DialogHeader>
         <div className="space-y-4 py-4">
-          <div className="rounded-xl border border-zinc-200 bg-zinc-50 p-4">
+          <div className="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50 p-4">
             <div className="flex items-start justify-between gap-3">
               <div>
-                <p className="font-mono font-semibold text-zinc-950">{invoice.invoice_number}</p>
-                <p className="text-sm text-zinc-600">{invoice.client?.name} - due {formatDate(invoice.due_date)}</p>
+                <p className="font-mono font-semibold text-zinc-950 dark:text-zinc-50">{invoice.invoice_number}</p>
+                <p className="text-sm text-zinc-600 dark:text-zinc-400">{invoice.client?.name} - due {formatDate(invoice.due_date)}</p>
               </div>
-              <p className="font-mono font-semibold text-zinc-950">{formatCurrency(invoice.total_amount, invoice.currency)}</p>
+              <p className="font-mono font-semibold text-zinc-950 dark:text-zinc-50">{formatCurrency(invoice.total_amount, invoice.currency)}</p>
             </div>
           </div>
 
           <div className="grid grid-cols-3 gap-2">
             {(["friendly", "firm", "final_notice"] as ReminderTone[]).map((item) => (
-              <button key={item} onClick={() => setTone(item)} className={tone === item ? "rounded-lg border border-indigo-600 bg-indigo-50 px-3 py-2 text-sm font-medium text-indigo-700" : "rounded-lg border border-zinc-200 px-3 py-2 text-sm font-medium text-zinc-700 hover:bg-zinc-50 transition-colors"}>
+              <button key={item} onClick={() => setTone(item)} className={tone === item ? "rounded-lg border border-indigo-600 bg-indigo-50 px-3 py-2 text-sm font-medium text-indigo-700" : "rounded-lg border border-zinc-200 dark:border-zinc-800 px-3 py-2 text-sm font-medium text-zinc-700 dark:text-zinc-300 hover:bg-zinc-50 dark:bg-zinc-900/50 transition-colors"}>
                 {item.replace("_", " ")}
               </button>
             ))}
@@ -71,7 +71,7 @@ export function SendReminderDialog({ invoice, onClose }: { invoice: Invoice; onC
             <textarea id="customMessage" value={customMessage} onChange={(event) => setCustomMessage(event.target.value)} rows={4} placeholder="Optional note for this client" className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50" />
           </div>
 
-          <div className="flex items-center gap-2 text-sm text-zinc-600">
+          <div className="flex items-center gap-2 text-sm text-zinc-600 dark:text-zinc-400">
             Tone preview <ToneBadge tone={tone} />
           </div>
 

@@ -22,10 +22,10 @@ export function BrandLogoLink({
       <Image
         src="/duely-logo.png"
         alt="Duely"
-        width={170}
-        height={54}
+        width={320}
+        height={96}
         priority={priority}
-        className={cn("h-9 w-auto", imageClassName)}
+        className={cn("h-16 w-auto", imageClassName)}
       />
     </Link>
   );

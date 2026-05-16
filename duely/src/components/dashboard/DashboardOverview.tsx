@@ -24,9 +24,9 @@ export function DashboardOverview({ data }: { data: DashboardData }) {
       </div>
 
       <div className="grid gap-6 xl:grid-cols-[1.35fr_0.65fr]">
-        <Card className="rounded-xl border border-zinc-200 bg-white overflow-hidden shadow-sm">
-          <CardHeader className="border-b border-zinc-200 bg-white">
-            <CardTitle className="text-lg font-semibold text-zinc-950">Recent invoices</CardTitle>
+        <Card className="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 overflow-hidden shadow-sm">
+          <CardHeader className="border-b border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950">
+            <CardTitle className="text-lg font-semibold text-zinc-950 dark:text-zinc-50">Recent invoices</CardTitle>
           </CardHeader>
           <div className="overflow-x-auto">
             <Table>
@@ -42,11 +42,11 @@ export function DashboardOverview({ data }: { data: DashboardData }) {
               <TableBody>
                 {data.recent_invoices.map((invoice) => (
                   <TableRow key={invoice.id}>
-                    <TableCell className="font-mono font-semibold text-zinc-950">{invoice.invoice_number}</TableCell>
-                    <TableCell className="text-zinc-700">{invoice.client?.name}</TableCell>
-                    <TableCell className="text-zinc-600">{formatDate(invoice.due_date)}</TableCell>
+                    <TableCell className="font-mono font-semibold text-zinc-950 dark:text-zinc-50">{invoice.invoice_number}</TableCell>
+                    <TableCell className="text-zinc-700 dark:text-zinc-300">{invoice.client?.name}</TableCell>
+                    <TableCell className="text-zinc-600 dark:text-zinc-400">{formatDate(invoice.due_date)}</TableCell>
                     <TableCell><StatusBadge status={invoice.status} /></TableCell>
-                    <TableCell className="text-right font-mono font-semibold text-zinc-950">{formatCurrency(invoice.total_amount, invoice.currency)}</TableCell>
+                    <TableCell className="text-right font-mono font-semibold text-zinc-950 dark:text-zinc-50">{formatCurrency(invoice.total_amount, invoice.currency)}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -54,19 +54,19 @@ export function DashboardOverview({ data }: { data: DashboardData }) {
           </div>
         </Card>
 
-        <Card className="rounded-xl border border-zinc-200 bg-white shadow-sm">
-          <CardHeader className="border-b border-zinc-200">
-            <CardTitle className="text-lg font-semibold text-zinc-950">Upcoming reminders</CardTitle>
+        <Card className="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 shadow-sm">
+          <CardHeader className="border-b border-zinc-200 dark:border-zinc-800">
+            <CardTitle className="text-lg font-semibold text-zinc-950 dark:text-zinc-50">Upcoming reminders</CardTitle>
           </CardHeader>
           <CardContent className="p-0 divide-y divide-zinc-100">
             {data.upcoming_reminders.map((reminder) => (
               <div key={reminder.id} className="p-5">
                 <div className="flex items-center justify-between gap-3">
-                  <p className="font-mono text-sm font-semibold text-zinc-950">{reminder.invoice?.invoice_number}</p>
+                  <p className="font-mono text-sm font-semibold text-zinc-950 dark:text-zinc-50">{reminder.invoice?.invoice_number}</p>
                   <ToneBadge tone={reminder.tone} />
                 </div>
-                <p className="mt-2 text-sm text-zinc-600">{reminder.invoice?.client?.name}</p>
-                <p className="mt-1 text-xs text-zinc-500">Scheduled for {formatDate(reminder.scheduled_for)}</p>
+                <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">{reminder.invoice?.client?.name}</p>
+                <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">Scheduled for {formatDate(reminder.scheduled_for)}</p>
               </div>
             ))}
           </CardContent>

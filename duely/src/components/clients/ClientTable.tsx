@@ -27,12 +27,12 @@ export function ClientTable({ clients }: { clients: Client[] }) {
     <div className="space-y-4">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
-          <h2 className="text-2xl font-bold text-zinc-950">Clients</h2>
-          <p className="text-sm text-zinc-500">Reliability scores show who needs earlier follow-up.</p>
+          <h2 className="text-2xl font-bold text-zinc-950 dark:text-zinc-50">Clients</h2>
+          <p className="text-sm text-zinc-500 dark:text-zinc-400">Reliability scores show who needs earlier follow-up.</p>
         </div>
         <CreateClientDialog />
       </div>
-      <div className="rounded-xl border border-zinc-200 bg-white shadow-sm overflow-hidden">
+      <div className="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 shadow-sm overflow-hidden">
         <Table>
           <TableHeader>
             <TableRow>
@@ -55,13 +55,13 @@ export function ClientTable({ clients }: { clients: Client[] }) {
               clients.map((client) => (
                 <TableRow key={client.id}>
                   <TableCell>
-                    <p className="font-medium text-zinc-950">{client.name}</p>
-                    <p className="text-xs text-zinc-500">{client.email}</p>
+                    <p className="font-medium text-zinc-950 dark:text-zinc-50">{client.name}</p>
+                    <p className="text-xs text-zinc-500 dark:text-zinc-400">{client.email}</p>
                   </TableCell>
-                  <TableCell className="hidden text-zinc-600 md:table-cell">{client.company}</TableCell>
+                  <TableCell className="hidden text-zinc-600 dark:text-zinc-400 md:table-cell">{client.company}</TableCell>
                   <TableCell><ReliabilityBadge reliability={client.reliability_tag} /></TableCell>
-                  <TableCell className="hidden text-right font-mono font-semibold text-zinc-950 md:table-cell">{client.avg_days_late}</TableCell>
-                  <TableCell className="text-right font-mono font-semibold text-zinc-950">{client.total_invoices}</TableCell>
+                  <TableCell className="hidden text-right font-mono font-semibold text-zinc-950 dark:text-zinc-50 md:table-cell">{client.avg_days_late}</TableCell>
+                  <TableCell className="text-right font-mono font-semibold text-zinc-950 dark:text-zinc-50">{client.total_invoices}</TableCell>
                   <TableCell className="text-right">
                     <DropdownMenu>
                       <DropdownMenuTrigger
