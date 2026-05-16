@@ -13,7 +13,13 @@ import {
 } from "@/components/ui/dialog";
 import type { Client } from "@/types";
 
-export function EditClientDialog({ client }: { client: Client }) {
+export function EditClientDialog({ 
+  client, 
+  trigger 
+}: { 
+  client: Client;
+  trigger?: React.ReactElement;
+}) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -52,10 +58,12 @@ export function EditClientDialog({ client }: { client: Client }) {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger
         render={
-          <button className="flex w-full items-center px-3 py-2 text-sm text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:bg-zinc-800 outline-none">
-            <Edit2 className="h-4 w-4 mr-2" />
-            Edit Client
-          </button>
+          trigger || (
+            <button className="flex w-full items-center px-3 py-2 text-sm text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:bg-zinc-800 outline-none">
+              <Edit2 className="h-4 w-4 mr-2" />
+              Edit Client
+            </button>
+          )
         }
       />
       <DialogContent>

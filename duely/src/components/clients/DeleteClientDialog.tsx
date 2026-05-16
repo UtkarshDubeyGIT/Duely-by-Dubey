@@ -14,7 +14,13 @@ import {
 } from "@/components/ui/dialog";
 import type { Client } from "@/types";
 
-export function DeleteClientDialog({ client }: { client: Client }) {
+export function DeleteClientDialog({ 
+  client,
+  trigger
+}: { 
+  client: Client;
+  trigger?: React.ReactElement;
+}) {
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -46,10 +52,12 @@ export function DeleteClientDialog({ client }: { client: Client }) {
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger
         render={
-          <button className="flex w-full items-center px-3 py-2 text-sm text-red-600 hover:bg-red-50 outline-none">
-            <Trash2 className="h-4 w-4 mr-2" />
-            Delete Client
-          </button>
+          trigger || (
+            <button className="flex w-full items-center px-3 py-2 text-sm text-red-600 hover:bg-red-50 outline-none">
+              <Trash2 className="h-4 w-4 mr-2" />
+              Delete Client
+            </button>
+          )
         }
       />
       <DialogContent>

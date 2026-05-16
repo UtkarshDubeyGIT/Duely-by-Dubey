@@ -5,7 +5,7 @@ import { ReliabilityBadge } from "@/components/ui/badge";
 import { EditClientDialog } from "@/components/clients/EditClientDialog";
 import { DeleteClientDialog } from "@/components/clients/DeleteClientDialog";
 import { CreateClientDialog } from "@/components/clients/CreateClientDialog";
-import { MoreHorizontal } from "lucide-react";
+import { Edit2, MoreHorizontal, Trash2 } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -71,16 +71,31 @@ export function ClientTable({ clients }: { clients: Client[] }) {
                           <MoreHorizontal className="h-4 w-4" />
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end" className="w-[160px]">
-                        <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                          <div className="w-full cursor-pointer">
-                            <EditClientDialog client={client} />
-                          </div>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                          <div className="w-full cursor-pointer">
-                            <DeleteClientDialog client={client} />
-                          </div>
-                        </DropdownMenuItem>
+                        <EditClientDialog
+                          client={client}
+                          trigger={
+                            <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                              <div className="flex w-full items-center">
+                                <Edit2 className="h-4 w-4 mr-2" />
+                                Edit Client
+                              </div>
+                            </DropdownMenuItem>
+                          }
+                        />
+                        <DeleteClientDialog
+                          client={client}
+                          trigger={
+                            <DropdownMenuItem
+                              onSelect={(e) => e.preventDefault()}
+                              className="text-red-600 focus:bg-red-50 focus:text-red-600 dark:focus:bg-red-950/20"
+                            >
+                              <div className="flex w-full items-center">
+                                <Trash2 className="h-4 w-4 mr-2" />
+                                Delete Client
+                              </div>
+                            </DropdownMenuItem>
+                          }
+                        />
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </TableCell>
