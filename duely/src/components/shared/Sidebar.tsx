@@ -49,7 +49,11 @@ export function Sidebar() {
                     : pathname.startsWith(item.href);
                 return (
                   <SidebarMenuItem key={item.href}>
-                    <SidebarMenuButton render={<Link href={item.href} />} isActive={active} tooltip={item.label}>
+                    <SidebarMenuButton
+                      render={<Link href={item.href} />}
+                      isActive={active}
+                      tooltip={item.label}
+                    >
                       <item.icon className="h-4 w-4 shrink-0" />
                       <span>{item.label}</span>
                     </SidebarMenuButton>
