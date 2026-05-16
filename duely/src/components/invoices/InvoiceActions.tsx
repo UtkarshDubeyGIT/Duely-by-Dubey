@@ -12,6 +12,7 @@ import {
 import { Button } from "@/components/ui/button";
 import type { Invoice } from "@/types";
 import { SendReminderDialog } from "@/components/invoices/SendReminderDialog";
+import { DeleteInvoiceDialog } from "@/components/invoices/DeleteInvoiceDialog";
 import { useRouter } from "next/navigation";
 
 export function InvoiceActions({ invoice }: { invoice: Invoice }) {
@@ -19,6 +20,7 @@ export function InvoiceActions({ invoice }: { invoice: Invoice }) {
   const [mounted, setMounted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showReminder, setShowReminder] = useState(false);
+  const [showDelete, setShowDelete] = useState(false);
 
   useEffect(() => {
     setTimeout(() => setMounted(true), 0);
@@ -44,8 +46,6 @@ export function InvoiceActions({ invoice }: { invoice: Invoice }) {
   };
 
   const deleteInvoice = async () => {
-    if (!confirm("Are you sure you want to delete this invoice?")) return;
-    
     setLoading(true);
     try {
       const response = await fetch(`/api/invoices/${invoice.id}`, {
@@ -53,6 +53,7 @@ export function InvoiceActions({ invoice }: { invoice: Invoice }) {
       });
 
       if (response.ok) {
+        setShowDelete(false);
         router.refresh();
       }
     } catch (err) {
@@ -107,7 +108,7 @@ export function InvoiceActions({ invoice }: { invoice: Invoice }) {
           </DropdownMenuItem>
 
           <DropdownMenuSeparator />
-          <DropdownMenuItem onClick={deleteInvoice} variant="destructive">
+          <DropdownMenuItem onClick={() => setShowDelete(true)} variant="destructive">
             <Trash2 className="mr-2 h-4 w-4" />
             Delete Invoice
           </DropdownMenuItem>
@@ -120,6 +121,14 @@ export function InvoiceActions({ invoice }: { invoice: Invoice }) {
           onClose={() => setShowReminder(false)} 
         />
       )}
+
+      <DeleteInvoiceDialog
+        invoiceNumber={invoice.invoice_number}
+        open={showDelete}
+        onOpenChange={setShowDelete}
+        onConfirm={deleteInvoice}
+        loading={loading}
+      />
     </>
   );
 }
