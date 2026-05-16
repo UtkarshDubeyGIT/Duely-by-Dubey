@@ -2,11 +2,9 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { 
-  Mail, 
+  Mail,
   Send, 
   Calendar, 
-  User, 
-  DollarSign,
   AlertCircle,
   Trash2,
   ReceiptText,
@@ -19,7 +17,6 @@ import {
 import {
   Dialog,
   DialogContent,
-  DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
