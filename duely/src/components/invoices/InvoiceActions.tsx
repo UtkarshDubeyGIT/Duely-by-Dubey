@@ -1,25 +1,28 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { CheckCircle, Clock, File, MoreHorizontal, Send, Trash2 } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import type { Invoice } from "@/types";
 import { SendReminderDialog } from "@/components/invoices/SendReminderDialog";
-
 import { useRouter } from "next/navigation";
 
 export function InvoiceActions({ invoice }: { invoice: Invoice }) {
   const router = useRouter();
+  const [mounted, setMounted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showReminder, setShowReminder] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const updateStatus = async (status: string) => {
     setLoading(true);
@@ -59,6 +62,8 @@ export function InvoiceActions({ invoice }: { invoice: Invoice }) {
     }
   };
 
+  if (!mounted) return <div className="h-8 w-8" />;
+
   return (
     <>
       <DropdownMenu>
@@ -71,14 +76,14 @@ export function InvoiceActions({ invoice }: { invoice: Invoice }) {
           }
         />
         <DropdownMenuContent align="end" className="w-48">
-          <DropdownMenuLabel>Actions</DropdownMenuLabel>
+          <div className="px-2 py-1.5 text-xs font-medium text-muted-foreground">Actions</div>
           <DropdownMenuItem onClick={() => setShowReminder(true)}>
             <Send className="mr-2 h-4 w-4" />
             Send Reminder
           </DropdownMenuItem>
           
           <DropdownMenuSeparator />
-          <DropdownMenuLabel>Update Status</DropdownMenuLabel>
+          <div className="px-2 py-1.5 text-xs font-medium text-muted-foreground">Update Status</div>
           <DropdownMenuItem 
             onClick={() => updateStatus("paid")}
             disabled={invoice.status === "paid"}
