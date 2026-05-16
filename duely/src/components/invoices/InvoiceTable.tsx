@@ -34,7 +34,9 @@ export function InvoiceTable({ invoices, clients }: { invoices: Invoice[]; clien
 
   useEffect(() => {
     const id = searchParams.get("id");
-    if (id) setSelectedId(id);
+    if (id) {
+      setTimeout(() => setSelectedId(id), 0);
+    }
   }, [searchParams]);
 
   const filtered = useMemo(() => {
@@ -103,7 +105,11 @@ export function InvoiceTable({ invoices, clients }: { invoices: Invoice[]; clien
                 </TableRow>
               ) : (
                 filtered.map((invoice) => (
-                  <TableRow key={invoice.id}>
+                  <TableRow 
+                    key={invoice.id} 
+                    className="cursor-pointer hover:bg-zinc-50 dark:hover:bg-zinc-900/50 transition-colors"
+                    onClick={() => setSelectedId(invoice.id)}
+                  >
                     <TableCell>
                       <p className="font-mono font-semibold text-zinc-950 dark:text-zinc-50">{invoice.invoice_number}</p>
                       <p className="text-xs text-zinc-500 dark:text-zinc-400">{invoice.description}</p>
@@ -112,7 +118,7 @@ export function InvoiceTable({ invoices, clients }: { invoices: Invoice[]; clien
                     <TableCell className="text-zinc-600 dark:text-zinc-400">{formatDate(invoice.due_date)}</TableCell>
                     <TableCell><StatusBadge status={invoice.status} /></TableCell>
                     <TableCell className="text-right font-mono font-semibold text-zinc-950 dark:text-zinc-50">{formatCurrency(invoice.total_amount, invoice.currency)}</TableCell>
-                    <TableCell className="text-right">
+                    <TableCell className="text-right" onClick={(e) => e.stopPropagation()}>
                       <InvoiceActions invoice={invoice} />
                     </TableCell>
                   </TableRow>
@@ -128,7 +134,11 @@ export function InvoiceTable({ invoices, clients }: { invoices: Invoice[]; clien
             </div>
           ) : (
             filtered.map((invoice) => (
-              <div key={invoice.id} className="p-4">
+              <div 
+                key={invoice.id} 
+                className="p-4 cursor-pointer hover:bg-zinc-50 dark:hover:bg-zinc-900/50 transition-colors active:bg-zinc-100 dark:active:bg-zinc-900"
+                onClick={() => setSelectedId(invoice.id)}
+              >
                 <div className="flex items-start justify-between gap-3">
                   <div>
                     <p className="font-mono font-semibold text-zinc-950 dark:text-zinc-50">{invoice.invoice_number}</p>
@@ -138,7 +148,9 @@ export function InvoiceTable({ invoices, clients }: { invoices: Invoice[]; clien
                 </div>
                 <div className="mt-4 flex items-center justify-between">
                   <p className="font-mono font-semibold">{formatCurrency(invoice.total_amount, invoice.currency)}</p>
-                  <InvoiceActions invoice={invoice} />
+                  <div onClick={(e) => e.stopPropagation()}>
+                    <InvoiceActions invoice={invoice} />
+                  </div>
                 </div>
               </div>
             ))
