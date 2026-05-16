@@ -12,13 +12,14 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { createClient } from "@/lib/supabase/client";
 
 export function UserNav() {
+  const [mounted, setMounted] = useState(false);
   const [user, setUser] = useState<{ name: string; email: string } | null>(null);
 
   useEffect(() => {
+    setMounted(true);
     const supabase = createClient();
     if (!supabase) return;
 
@@ -33,13 +34,19 @@ export function UserNav() {
   }, []);
 
   const handleLogout = async () => {
-    const response = await fetch("/api/auth/signout", {
-      method: "POST",
-    });
-    if (response.ok) {
-      window.location.href = "/login";
+    try {
+      const response = await fetch("/api/auth/signout", {
+        method: "POST",
+      });
+      if (response.ok) {
+        window.location.href = "/login";
+      }
+    } catch (err) {
+      console.error("Logout failed", err);
     }
   };
+
+  if (!mounted) return <div className="h-9 w-9 rounded-full bg-muted animate-pulse" />;
 
   const displayName = user?.name || "Dubey Studio";
   const displayEmail = user?.email || "demo@duely.tech";
@@ -48,12 +55,8 @@ export function UserNav() {
     <DropdownMenu>
       <DropdownMenuTrigger
         render={
-          <button className="relative h-9 w-9 rounded-full outline-none focus-visible:ring-2 focus-visible:ring-indigo-500">
-            <Avatar className="h-9 w-9 border border-sidebar-border">
-              <AvatarFallback className="bg-sidebar-primary text-sidebar-primary-foreground text-xs font-semibold">
-                {getInitials(displayName)}
-              </AvatarFallback>
-            </Avatar>
+          <button className="relative flex h-9 w-9 items-center justify-center rounded-full bg-sidebar-primary text-xs font-semibold text-sidebar-primary-foreground outline-none focus-visible:ring-2 focus-visible:ring-indigo-500 border border-sidebar-border">
+            {getInitials(displayName)}
           </button>
         }
       />
