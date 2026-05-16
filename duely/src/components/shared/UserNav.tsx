@@ -6,9 +6,7 @@ import { getInitials } from "@/lib/utils";
 import {
   DropdownMenu,
   DropdownMenuContent,
-  DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
@@ -19,7 +17,7 @@ export function UserNav() {
   const [user, setUser] = useState<{ name: string; email: string } | null>(null);
 
   useEffect(() => {
-    setMounted(true);
+    setTimeout(() => setMounted(true), 0);
     const supabase = createClient();
     if (!supabase) return;
 

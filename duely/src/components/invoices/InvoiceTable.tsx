@@ -1,11 +1,9 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { MoreHorizontal, Search, Send } from "lucide-react";
+import { Search } from "lucide-react";
 import type { Client, Invoice } from "@/types";
 import { CreateInvoiceDialog } from "@/components/invoices/CreateInvoiceDialog";
-import { SendReminderDialog } from "@/components/invoices/SendReminderDialog";
-import { Button } from "@/components/ui/button";
 import { StatusBadge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import {
@@ -25,10 +23,11 @@ import {
 } from "@/components/ui/table";
 import { formatCurrency, formatDate } from "@/lib/utils";
 
+import { InvoiceActions } from "@/components/invoices/InvoiceActions";
+
 export function InvoiceTable({ invoices, clients }: { invoices: Invoice[]; clients: Client[] }) {
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState("all");
-  const [selected, setSelected] = useState<Invoice | null>(null);
 
   const filtered = useMemo(() => {
     return invoices.filter((invoice) => {
@@ -106,10 +105,7 @@ export function InvoiceTable({ invoices, clients }: { invoices: Invoice[]; clien
                     <TableCell><StatusBadge status={invoice.status} /></TableCell>
                     <TableCell className="text-right font-mono font-semibold text-zinc-950 dark:text-zinc-50">{formatCurrency(invoice.total_amount, invoice.currency)}</TableCell>
                     <TableCell className="text-right">
-                      <Button variant="ghost" size="sm" onClick={() => setSelected(invoice)}>
-                        <Send className="h-4 w-4" />
-                        Remind
-                      </Button>
+                      <InvoiceActions invoice={invoice} />
                     </TableCell>
                   </TableRow>
                 ))
@@ -134,17 +130,13 @@ export function InvoiceTable({ invoices, clients }: { invoices: Invoice[]; clien
                 </div>
                 <div className="mt-4 flex items-center justify-between">
                   <p className="font-mono font-semibold">{formatCurrency(invoice.total_amount, invoice.currency)}</p>
-                  <button className="rounded-lg p-2 text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:bg-zinc-800" onClick={() => setSelected(invoice)} aria-label="Invoice actions">
-                    <MoreHorizontal className="h-4 w-4" />
-                  </button>
+                  <InvoiceActions invoice={invoice} />
                 </div>
               </div>
             ))
           )}
         </div>
       </div>
-
-      {selected ? <SendReminderDialog invoice={selected} onClose={() => setSelected(null)} /> : null}
     </div>
   );
 }
