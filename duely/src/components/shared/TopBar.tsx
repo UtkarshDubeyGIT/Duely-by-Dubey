@@ -3,6 +3,7 @@
 import { Bell, Search } from "lucide-react";
 import { usePathname } from "next/navigation";
 import { getInitials } from "@/lib/utils";
+import { SidebarTrigger } from "@/components/ui/sidebar";
 
 const titles: Record<string, string> = {
   "/dashboard": "Dashboard",
@@ -17,7 +18,8 @@ export function TopBar() {
 
   return (
     <header className="flex h-16 shrink-0 items-center justify-between border-b border-zinc-200 bg-white px-4 md:px-6">
-      <div>
+      <div className="flex items-center gap-2">
+        <SidebarTrigger className="-ml-2 md:hidden" />
         <h1 className="text-2xl font-bold text-zinc-950">{title}</h1>
       </div>
       <div className="hidden w-full max-w-md items-center gap-2 rounded-lg border border-zinc-200 bg-white px-3 py-2 md:flex">

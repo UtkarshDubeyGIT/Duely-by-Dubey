@@ -11,7 +11,17 @@ import {
   Users,
 } from "lucide-react";
 import { BrandLogoLink } from "@/components/shared/BrandLogoLink";
-import { cn } from "@/lib/utils";
+import {
+  Sidebar as ShadcnSidebar,
+  SidebarContent,
+  SidebarGroup,
+  SidebarGroupContent,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarHeader,
+  SidebarFooter,
+} from "@/components/ui/sidebar";
 
 const nav = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
@@ -24,44 +34,50 @@ export function Sidebar() {
   const pathname = usePathname();
 
   return (
-    <aside className="hidden h-screen w-60 shrink-0 flex-col bg-zinc-950 text-white md:flex">
-      <div className="flex h-16 items-center border-b border-zinc-800 px-6">
-        <BrandLogoLink imageClassName="h-8 w-auto brightness-0 invert" />
-      </div>
-      <nav className="flex-1 space-y-1 px-3 py-4">
-        {nav.map((item) => {
-          const Icon = item.icon;
-          const active =
-            item.href === "/"
-              ? pathname === "/"
-              : pathname.startsWith(item.href);
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={cn(
-                "flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-zinc-400 hover:bg-zinc-800 hover:text-white",
-                active && "bg-indigo-600 text-white hover:bg-indigo-600",
-              )}
-            >
-              <Icon className="h-4 w-4" />
-              {item.label}
-            </Link>
-          );
-        })}
-      </nav>
-      <div className="border-t border-zinc-800 p-3">
-        <button className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-zinc-400 hover:bg-zinc-800 hover:text-white">
-          <Settings className="h-4 w-4" />
-          Settings
-        </button>
-        <form action="/api/auth/signout" method="post" className="mt-1">
-          <button className="flex w-full items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium text-zinc-400 hover:bg-zinc-800 hover:text-white">
-            <LogOut className="h-4 w-4" />
-            Sign out
-          </button>
-        </form>
-      </div>
-    </aside>
+    <ShadcnSidebar variant="inset">
+      <SidebarHeader className="h-16 flex items-center justify-center border-b border-sidebar-border px-6">
+        <BrandLogoLink imageClassName="h-8 w-auto" />
+      </SidebarHeader>
+      <SidebarContent>
+        <SidebarGroup>
+          <SidebarGroupContent>
+            <SidebarMenu className="space-y-1 py-4 px-2">
+              {nav.map((item) => {
+                const active =
+                  item.href === "/"
+                    ? pathname === "/"
+                    : pathname.startsWith(item.href);
+                return (
+                  <SidebarMenuItem key={item.href}>
+                    <SidebarMenuButton render={<Link href={item.href} />} isActive={active} tooltip={item.label}>
+                      <item.icon className="h-4 w-4 shrink-0" />
+                      <span>{item.label}</span>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                );
+              })}
+            </SidebarMenu>
+          </SidebarGroupContent>
+        </SidebarGroup>
+      </SidebarContent>
+      <SidebarFooter className="border-t border-sidebar-border p-3">
+        <SidebarMenu>
+          <SidebarMenuItem>
+            <SidebarMenuButton render={<button />}>
+              <Settings className="h-4 w-4" />
+              <span>Settings</span>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+          <SidebarMenuItem>
+            <form action="/api/auth/signout" method="post" className="w-full">
+              <SidebarMenuButton render={<button type="submit" />}>
+                <LogOut className="h-4 w-4" />
+                <span>Sign out</span>
+              </SidebarMenuButton>
+            </form>
+          </SidebarMenuItem>
+        </SidebarMenu>
+      </SidebarFooter>
+    </ShadcnSidebar>
   );
 }

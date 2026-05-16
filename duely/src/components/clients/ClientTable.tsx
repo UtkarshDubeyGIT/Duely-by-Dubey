@@ -1,9 +1,26 @@
+"use client";
+
 import type { Client } from "@/types";
 import { ReliabilityBadge } from "@/components/ui/badge";
 import { EditClientDialog } from "@/components/clients/EditClientDialog";
 import { DeleteClientDialog } from "@/components/clients/DeleteClientDialog";
 import { CreateClientDialog } from "@/components/clients/CreateClientDialog";
 import { MoreHorizontal } from "lucide-react";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export function ClientTable({ clients }: { clients: Client[] }) {
   return (
@@ -15,46 +32,63 @@ export function ClientTable({ clients }: { clients: Client[] }) {
         </div>
         <CreateClientDialog />
       </div>
-      <div className="overflow-hidden rounded-xl border border-zinc-200 bg-white">
-        <table className="w-full text-sm">
-          <thead className="bg-zinc-50 text-xs uppercase text-zinc-500">
-            <tr>
-              <th className="px-5 py-3 text-left font-medium">Name</th>
-              <th className="hidden px-5 py-3 text-left font-medium md:table-cell">Company</th>
-              <th className="px-5 py-3 text-left font-medium">Reliability</th>
-              <th className="hidden px-5 py-3 text-right font-medium md:table-cell">Avg late</th>
-              <th className="px-5 py-3 text-right font-medium">Invoices</th>
-              <th className="px-5 py-3 text-right font-medium">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {clients.map((client) => (
-              <tr key={client.id} className="border-t border-zinc-100 hover:bg-zinc-50">
-                <td className="px-5 py-4">
-                  <p className="font-medium text-zinc-950">{client.name}</p>
-                  <p className="text-xs text-zinc-500">{client.email}</p>
-                </td>
-                <td className="hidden px-5 py-4 text-zinc-600 md:table-cell">{client.company}</td>
-                <td className="px-5 py-4"><ReliabilityBadge reliability={client.reliability_tag} /></td>
-                <td className="hidden px-5 py-4 text-right font-mono font-semibold text-zinc-950 md:table-cell">{client.avg_days_late}</td>
-                <td className="px-5 py-4 text-right font-mono font-semibold text-zinc-950">{client.total_invoices}</td>
-                <td className="px-5 py-4 text-right">
-                  <div className="flex justify-end items-center space-x-2">
-                    <div className="group relative">
-                      <button className="rounded-lg p-2 text-zinc-500 hover:bg-zinc-100" aria-label="Client actions">
-                        <MoreHorizontal className="h-4 w-4" />
-                      </button>
-                      <div className="absolute right-0 top-full z-10 hidden w-48 rounded-lg border border-zinc-200 bg-white p-1 shadow-lg group-hover:block group-focus-within:block">
-                        <EditClientDialog client={client} />
-                        <DeleteClientDialog client={client} />
-                      </div>
-                    </div>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      <div className="rounded-xl border border-zinc-200 bg-white shadow-sm overflow-hidden">
+        <Table>
+          <TableHeader>
+            <TableRow>
+              <TableHead>Name</TableHead>
+              <TableHead className="hidden md:table-cell">Company</TableHead>
+              <TableHead>Reliability</TableHead>
+              <TableHead className="hidden text-right md:table-cell">Avg late</TableHead>
+              <TableHead className="text-right">Invoices</TableHead>
+              <TableHead className="text-right">Actions</TableHead>
+            </TableRow>
+          </TableHeader>
+          <TableBody>
+            {clients.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={6} className="h-24 text-center text-muted-foreground">
+                  No clients found.
+                </TableCell>
+              </TableRow>
+            ) : (
+              clients.map((client) => (
+                <TableRow key={client.id}>
+                  <TableCell>
+                    <p className="font-medium text-zinc-950">{client.name}</p>
+                    <p className="text-xs text-zinc-500">{client.email}</p>
+                  </TableCell>
+                  <TableCell className="hidden text-zinc-600 md:table-cell">{client.company}</TableCell>
+                  <TableCell><ReliabilityBadge reliability={client.reliability_tag} /></TableCell>
+                  <TableCell className="hidden text-right font-mono font-semibold text-zinc-950 md:table-cell">{client.avg_days_late}</TableCell>
+                  <TableCell className="text-right font-mono font-semibold text-zinc-950">{client.total_invoices}</TableCell>
+                  <TableCell className="text-right">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger
+                        render={<Button variant="ghost" size="icon" className="h-8 w-8" />}
+                      >
+                          <span className="sr-only">Open menu</span>
+                          <MoreHorizontal className="h-4 w-4" />
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end" className="w-[160px]">
+                        <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                          <div className="w-full cursor-pointer">
+                            <EditClientDialog client={client} />
+                          </div>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                          <div className="w-full cursor-pointer">
+                            <DeleteClientDialog client={client} />
+                          </div>
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
+          </TableBody>
+        </Table>
       </div>
     </div>
   );
