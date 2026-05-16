@@ -1,6 +1,6 @@
 # Duely — Smart Payment Reminders for Small Businesses
 
-> **Duely by Dubey** — Built for the BinaryAutomates Software Engineering Internship
+> **Duely by Dubey** — Built for the Binary-Automates Software Engineering Internship
 
 **Get paid on time, without the awkward follow-ups.**
 
