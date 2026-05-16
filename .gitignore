@@ -44,3 +44,5 @@ duely/*.tsbuildinfo
 # Root-level lockfile — keep out of git so Turbopack doesn't confuse
 # the monorepo root with the Next.js workspace root (duely/)
 /package-lock.json
+
+Icon
