@@ -1,4 +1,4 @@
-<img width="2048" height="512" alt="github-banner-gemini" src="https://github.com/user-attachments/assets/79447a8c-3780-4357-aba4-acd63ddc57b8" />
+<img width="2172" height="724" alt="github-banner-final" src="https://github.com/user-attachments/assets/79f2399e-289c-4be8-9bec-27bff4abd8be" />
 
 # Duely — Smart Payment Reminders for Small Businesses
 
