@@ -1,14 +1,12 @@
 "use client";
 
 import { useState } from "react";
-import { Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
   DialogFooter,
   DialogDescription,
 } from "@/components/ui/dialog";
@@ -16,12 +14,13 @@ import type { Client } from "@/types";
 
 export function DeleteClientDialog({ 
   client,
-  trigger
+  open,
+  onOpenChange
 }: { 
   client: Client;
-  trigger?: React.ReactElement;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }) {
-  const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -49,17 +48,7 @@ export function DeleteClientDialog({
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger
-        render={
-          trigger || (
-            <button className="flex w-full items-center px-3 py-2 text-sm text-red-600 hover:bg-red-50 outline-none">
-              <Trash2 className="h-4 w-4 mr-2" />
-              Delete Client
-            </button>
-          )
-        }
-      />
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Delete Client</DialogTitle>
@@ -72,7 +61,7 @@ export function DeleteClientDialog({
         {error ? <p className="text-sm text-red-600 mt-2">{error}</p> : null}
 
         <DialogFooter>
-          <Button type="button" variant="ghost" onClick={() => setOpen(false)}>
+          <Button type="button" variant="ghost" onClick={() => onOpenChange?.(false)}>
             Cancel
           </Button>
           <Button

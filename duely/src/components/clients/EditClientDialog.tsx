@@ -1,26 +1,25 @@
 "use client";
 
 import { useState } from "react";
-import { Edit2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
   DialogFooter,
 } from "@/components/ui/dialog";
 import type { Client } from "@/types";
 
 export function EditClientDialog({ 
   client, 
-  trigger 
+  open,
+  onOpenChange
 }: { 
   client: Client;
-  trigger?: React.ReactElement;
+  open?: boolean;
+  onOpenChange?: (open: boolean) => void;
 }) {
-  const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -55,17 +54,7 @@ export function EditClientDialog({
   }
 
   return (
-    <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger
-        render={
-          trigger || (
-            <button className="flex w-full items-center px-3 py-2 text-sm text-zinc-700 dark:text-zinc-300 hover:bg-zinc-100 dark:bg-zinc-800 outline-none">
-              <Edit2 className="h-4 w-4 mr-2" />
-              Edit Client
-            </button>
-          )
-        }
-      />
+    <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Edit Client</DialogTitle>
@@ -105,7 +94,7 @@ export function EditClientDialog({
             <Button
               type="button"
               variant="ghost"
-              onClick={() => setOpen(false)}
+              onClick={() => onOpenChange?.(false)}
             >
               Cancel
             </Button>

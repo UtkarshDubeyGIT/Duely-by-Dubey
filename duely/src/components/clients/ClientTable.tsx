@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import type { Client } from "@/types";
 import { ReliabilityBadge } from "@/components/ui/badge";
 import { EditClientDialog } from "@/components/clients/EditClientDialog";
@@ -23,6 +24,9 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 export function ClientTable({ clients }: { clients: Client[] }) {
+  const [editingClient, setEditingClient] = useState<Client | null>(null);
+  const [deletingClient, setDeletingClient] = useState<Client | null>(null);
+
   return (
     <div className="space-y-4">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
@@ -32,6 +36,23 @@ export function ClientTable({ clients }: { clients: Client[] }) {
         </div>
         <CreateClientDialog />
       </div>
+
+      {/* Global Dialogs (outside the menu hierarchy) */}
+      {editingClient && (
+        <EditClientDialog
+          client={editingClient}
+          open={!!editingClient}
+          onOpenChange={(open) => !open && setEditingClient(null)}
+        />
+      )}
+      {deletingClient && (
+        <DeleteClientDialog
+          client={deletingClient}
+          open={!!deletingClient}
+          onOpenChange={(open) => !open && setDeletingClient(null)}
+        />
+      )}
+
       <div className="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 shadow-sm overflow-hidden">
         <Table>
           <TableHeader>
@@ -71,31 +92,21 @@ export function ClientTable({ clients }: { clients: Client[] }) {
                           <MoreHorizontal className="h-4 w-4" />
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end" className="w-[160px]">
-                        <EditClientDialog
-                          client={client}
-                          trigger={
-                            <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                              <div className="flex w-full items-center">
-                                <Edit2 className="h-4 w-4 mr-2" />
-                                Edit Client
-                              </div>
-                            </DropdownMenuItem>
-                          }
-                        />
-                        <DeleteClientDialog
-                          client={client}
-                          trigger={
-                            <DropdownMenuItem
-                              onSelect={(e) => e.preventDefault()}
-                              className="text-red-600 focus:bg-red-50 focus:text-red-600 dark:focus:bg-red-950/20"
-                            >
-                              <div className="flex w-full items-center">
-                                <Trash2 className="h-4 w-4 mr-2" />
-                                Delete Client
-                              </div>
-                            </DropdownMenuItem>
-                          }
-                        />
+                        <DropdownMenuItem onSelect={() => setEditingClient(client)}>
+                          <div className="flex w-full items-center">
+                            <Edit2 className="h-4 w-4 mr-2" />
+                            Edit Client
+                          </div>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem 
+                          onSelect={() => setDeletingClient(client)}
+                          className="text-red-600 focus:bg-red-50 focus:text-red-600 dark:focus:bg-red-950/20"
+                        >
+                          <div className="flex w-full items-center">
+                            <Trash2 className="h-4 w-4 mr-2" />
+                            Delete Client
+                          </div>
+                        </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </TableCell>
