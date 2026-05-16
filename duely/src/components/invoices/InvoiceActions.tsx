@@ -21,7 +21,7 @@ export function InvoiceActions({ invoice }: { invoice: Invoice }) {
   const [showReminder, setShowReminder] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
+    setTimeout(() => setMounted(true), 0);
   }, []);
 
   const updateStatus = async (status: string) => {

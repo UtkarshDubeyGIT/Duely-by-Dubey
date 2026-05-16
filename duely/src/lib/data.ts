@@ -35,9 +35,15 @@ export const getClients = cache(async (): Promise<Client[]> => {
   }
 
   try {
-    const { data, error } = await supabase.from("clients").select("*").order("created_at", { ascending: false });
+    const { data, error } = await supabase
+      .from("clients")
+      .select("*, invoices(count)")
+      .order("created_at", { ascending: false });
     if (error) throw error;
-    return (data ?? []) as Client[];
+    return (data ?? []).map((client) => ({
+      ...client,
+      total_invoices: (client.invoices as unknown as { count: number }[])?.[0]?.count ?? 0,
+    })) as Client[];
   } catch {
     return demoClients;
   }
