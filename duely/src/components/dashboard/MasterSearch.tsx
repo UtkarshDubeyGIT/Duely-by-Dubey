@@ -16,12 +16,14 @@ import { StatusBadge } from "@/components/ui/badge";
 import { InvoiceDetailDialog } from "@/components/dashboard/InvoiceDetailDialog";
 
 export function MasterSearch() {
+  const [mounted, setMounted] = useState(false);
   const [open, setOpen] = useState(false);
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [selectedInvoiceId, setSelectedInvoiceId] = useState<string | null>(null);
   const [detailOpen, setDetailOpen] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
     const down = (e: KeyboardEvent) => {
       if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
@@ -45,6 +47,13 @@ export function MasterSearch() {
     setOpen(false);
     setDetailOpen(true);
   };
+
+  if (!mounted) return (
+    <div className="flex w-full max-w-md items-center gap-2 rounded-lg border border-sidebar-border bg-background px-3 py-2 text-muted-foreground transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-900 min-w-0">
+      <Search className="h-4 w-4 shrink-0" />
+      <span className="text-sm truncate">Search invoices, clients...</span>
+    </div>
+  );
 
   return (
     <>
