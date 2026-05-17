@@ -25,6 +25,27 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
     return NextResponse.json({ data: null, error: "Database not configured" }, { status: 503 });
   }
 
+  // If email is being updated, check for duplicates within the same org (excluding this client)
+  if (parsed.data.email) {
+    const { data: profile } = await supabase.from("profiles").select("org_id").single();
+    const orgId = profile?.org_id;
+
+    const { data: existing } = await supabase
+      .from("clients")
+      .select("id, name")
+      .eq("email", parsed.data.email)
+      .eq("org_id", orgId)
+      .neq("id", id)
+      .maybeSingle();
+
+    if (existing) {
+      return NextResponse.json(
+        { data: null, error: `Another client already uses this email ("${existing.name}").` },
+        { status: 409 },
+      );
+    }
+  }
+
   const { data, error } = await supabase.from("clients").update(parsed.data).eq("id", id).select("*").single();
   
   if (error) {

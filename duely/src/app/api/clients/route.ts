@@ -20,7 +20,24 @@ export async function POST(request: Request) {
   }
 
   const { data: profile } = await supabase.from("profiles").select("org_id").single();
-  const { data, error } = await supabase.from("clients").insert({ ...parsed.data, org_id: profile?.org_id, reliability_tag: "new", avg_days_late: 0 }).select("*").single();
+  const orgId = profile?.org_id;
+
+  // Check for duplicate client by email within the same org
+  const { data: existing } = await supabase
+    .from("clients")
+    .select("id, name")
+    .eq("email", parsed.data.email)
+    .eq("org_id", orgId)
+    .maybeSingle();
+
+  if (existing) {
+    return NextResponse.json(
+      { data: null, error: `A client with this email already exists ("${existing.name}").` },
+      { status: 409 },
+    );
+  }
+
+  const { data, error } = await supabase.from("clients").insert({ ...parsed.data, org_id: orgId, reliability_tag: "new", avg_days_late: 0 }).select("*").single();
   if (error) {
     return NextResponse.json({ data: null, error: error.message }, { status: 500 });
   }
