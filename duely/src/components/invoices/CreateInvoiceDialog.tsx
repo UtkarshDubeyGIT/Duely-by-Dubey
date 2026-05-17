@@ -34,7 +34,7 @@ export function CreateInvoiceDialog({ clients, nextInvoiceNumber }: { clients: C
       client_id: String(formData.get("client_id") || ""),
       invoice_number: String(formData.get("invoice_number") || nextInvoiceNumber),
       amount,
-      currency: "USD",
+      currency: "INR",
       tax_rate: Number(formData.get("tax_rate") || 0),
       issued_date: String(formData.get("issued_date") || ""),
       due_date: String(formData.get("due_date") || ""),

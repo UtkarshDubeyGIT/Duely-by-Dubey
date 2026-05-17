@@ -11,7 +11,7 @@ export const createInvoiceSchema = z.object({
   client_id: z.string().min(1, "Select a client"),
   invoice_number: z.string().min(1),
   amount: z.coerce.number().min(0.01, "Amount must be greater than 0"),
-  currency: z.string().default("USD"),
+  currency: z.string().default("INR"),
   tax_rate: z.coerce.number().min(0).max(100).default(0),
   issued_date: z.string().min(1),
   due_date: z.string().min(1),

@@ -41,7 +41,7 @@ create table public.invoices (
   client_id uuid references public.clients(id) on delete cascade not null,
   invoice_number text not null,
   amount numeric(12,2) not null,
-  currency text not null default 'USD',
+  currency text not null default 'INR',
   tax_rate numeric(5,2) not null default 0,
   tax_amount numeric(12,2) not null default 0,
   total_amount numeric(12,2) not null,
