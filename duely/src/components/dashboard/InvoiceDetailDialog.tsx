@@ -29,6 +29,7 @@ import { formatCurrency, formatDate } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { SendReminderDialog } from "@/components/invoices/SendReminderDialog";
 import { DeleteInvoiceDialog } from "@/components/invoices/DeleteInvoiceDialog";
+import { InvoiceDetailSkeleton } from "@/components/shared/LoadingStates";
 
 export function InvoiceDetailDialog({ 
   invoiceId, 
@@ -137,10 +138,7 @@ export function InvoiceDetailDialog({
           <div className="min-h-0 flex-1 overflow-y-auto bg-white dark:bg-zinc-950">
             <div className="p-4 sm:p-6 lg:p-8">
               {loading ? (
-                <div className="py-24 text-center">
-                  <div className="inline-block h-6 w-6 animate-spin rounded-full border-2 border-solid border-indigo-600 border-r-transparent" />
-                  <p className="mt-4 text-xs font-medium text-zinc-400 uppercase tracking-widest">Loading</p>
-                </div>
+                <InvoiceDetailSkeleton />
               ) : error ? (
                 <div className="py-20 text-center">
                   <AlertCircle className="mx-auto h-10 w-10 text-red-500 opacity-50 mb-4" />
