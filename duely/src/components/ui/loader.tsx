@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import { motion } from "motion/react";
 import React from "react";
 
@@ -96,31 +97,38 @@ export const LoaderTwo = () => {
 
 export const LoaderThree = () => {
   return (
-    <motion.svg
-      xmlns="http://www.w3.org/2000/svg"
-      width="24"
-      height="24"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="1"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      className="h-20 w-20 stroke-neutral-500 [--fill-final:var(--color-yellow-300)] [--fill-initial:var(--color-neutral-50)] dark:stroke-neutral-100 dark:[--fill-final:var(--color-yellow-500)] dark:[--fill-initial:var(--color-neutral-800)]"
+    <motion.div
+      initial={{ opacity: 0.65, scale: 0.96 }}
+      animate={{
+        opacity: [0.65, 1, 0.65],
+        scale: [0.96, 1.03, 0.96],
+      }}
+      transition={{
+        duration: 1.8,
+        ease: "easeInOut" as const,
+        repeat: Infinity,
+      }}
+      className="relative flex h-24 w-24 items-center justify-center rounded-2xl"
     >
-      <motion.path stroke="none" d="M0 0h24v24H0z" fill="none" />
-      <motion.path
-        initial={{ pathLength: 0, fill: "var(--fill-initial)" }}
-        animate={{ pathLength: 1, fill: "var(--fill-final)" }}
+      <motion.div
+        aria-hidden="true"
+        className="absolute inset-2 rounded-full bg-indigo-500/10 blur-xl"
+        animate={{ opacity: [0.35, 0.75, 0.35] }}
         transition={{
-          duration: 2,
+          duration: 1.8,
           ease: "easeInOut" as const,
           repeat: Infinity,
-          repeatType: "reverse",
         }}
-        d="M13 3l0 7l6 0l-8 11l0 -7l-6 0l8 -11"
       />
-    </motion.svg>
+      <Image
+        src="/logo-2.svg"
+        alt="Duely loading"
+        width={80}
+        height={80}
+        priority
+        className="relative h-20 w-20 object-contain"
+      />
+    </motion.div>
   );
 };
 

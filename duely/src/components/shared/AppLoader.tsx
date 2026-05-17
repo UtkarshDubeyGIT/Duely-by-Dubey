@@ -1,6 +1,5 @@
 "use client";
 
-import Image from "next/image";
 import { LoaderThree } from "@/components/ui/loader";
 import { cn } from "@/lib/utils";
 
@@ -25,15 +24,7 @@ export function AppLoader({
       role="status"
       aria-live="polite"
     >
-      <div className="flex flex-col items-center gap-5">
-        <Image
-          src="/logo-2.svg"
-          alt="Duely"
-          width={176}
-          height={56}
-          priority
-          className="h-12 w-auto"
-        />
+      <div className="flex flex-col items-center gap-4">
         <div className="text-zinc-500 dark:text-zinc-300">
           <LoaderThree />
         </div>
