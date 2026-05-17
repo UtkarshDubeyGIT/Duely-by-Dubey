@@ -1,7 +1,7 @@
 import { ClientTable } from "@/components/clients/ClientTable";
-import { getClients } from "@/lib/data";
+import { getClients, getInvoices } from "@/lib/data";
 
 export default async function ClientsPage() {
-  const clients = await getClients();
-  return <ClientTable clients={clients} />;
+  const [clients, invoices] = await Promise.all([getClients(), getInvoices()]);
+  return <ClientTable clients={clients} invoices={invoices} />;
 }

@@ -20,7 +20,7 @@ export default function SignupPage() {
           <input 
             name="business_name" 
             placeholder="Acme Studio"
-            className="h-9 rounded-lg border border-zinc-200 dark:border-zinc-800 px-3 text-sm outline-none focus:border-indigo-500" 
+            className="h-9 w-full rounded-lg border border-zinc-200 dark:border-zinc-800 px-3 text-sm outline-none focus:border-indigo-500" 
           />
         </label>
         <label className="grid gap-1.5 text-sm font-medium text-zinc-700 dark:text-zinc-300">
@@ -28,7 +28,7 @@ export default function SignupPage() {
           <input 
             name="full_name" 
             placeholder="John Doe"
-            className="h-9 rounded-lg border border-zinc-200 dark:border-zinc-800 px-3 text-sm outline-none focus:border-indigo-500" 
+            className="h-9 w-full rounded-lg border border-zinc-200 dark:border-zinc-800 px-3 text-sm outline-none focus:border-indigo-500" 
           />
         </label>
         <label className="grid gap-1.5 text-sm font-medium text-zinc-700 dark:text-zinc-300">
@@ -37,7 +37,7 @@ export default function SignupPage() {
             name="email" 
             type="email" 
             placeholder="john@example.com"
-            className="h-9 rounded-lg border border-zinc-200 dark:border-zinc-800 px-3 text-sm outline-none focus:border-indigo-500" 
+            className="h-9 w-full rounded-lg border border-zinc-200 dark:border-zinc-800 px-3 text-sm outline-none focus:border-indigo-500" 
           />
         </label>
         <label className="grid gap-1.5 text-sm font-medium text-zinc-700 dark:text-zinc-300">
@@ -46,7 +46,7 @@ export default function SignupPage() {
             name="password" 
             type="password" 
             placeholder="••••••••"
-            className="h-9 rounded-lg border border-zinc-200 dark:border-zinc-800 px-3 text-sm outline-none focus:border-indigo-500" 
+            className="h-9 w-full rounded-lg border border-zinc-200 dark:border-zinc-800 px-3 text-sm outline-none focus:border-indigo-500" 
           />
         </label>
         {state?.error ? <p className="text-sm text-red-600">{state.error}</p> : null}

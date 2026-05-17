@@ -99,8 +99,8 @@ export default function LandingPage() {
             </div>
           </div>
 
-          <div className="relative mx-auto mt-16 h-140 max-w-6xl">
-            <div className="absolute left-1/2 top-1/2 z-20 w-full max-w-2xl -translate-x-1/2 -translate-y-1/2 rounded-[28px] border border-[#d8d8d8] bg-white dark:bg-zinc-950 p-8 shadow-[0_24px_50px_-22px_rgba(0,0,0,0.2)] md:p-10">
+          <div className="relative mx-auto mt-12 md:mt-16 max-w-6xl">
+            <div className="relative z-20 mx-auto w-full max-w-2xl rounded-[28px] border border-[#d8d8d8] bg-white dark:bg-zinc-950 p-6 shadow-[0_24px_50px_-22px_rgba(0,0,0,0.2)] md:p-10 md:mb-56">
               <div className="flex flex-col gap-6 border-b border-[#e5e5e5] pb-8 md:flex-row md:items-start md:justify-between">
                 <div>
                   <div className="text-xs font-semibold uppercase tracking-[0.22em] text-[#6b6e72] dark:text-zinc-400">

@@ -16,7 +16,7 @@ export default function AuthLayout({
       <AuthLeftPanel />
 
       {/* Right – form panel */}
-      <section className="flex min-h-screen w-full items-center justify-center bg-zinc-50 dark:bg-zinc-900 p-4 text-zinc-950 dark:text-zinc-50 lg:w-[480px]">
+      <section className="flex min-h-screen w-full flex-1 items-center justify-center bg-zinc-50 dark:bg-zinc-900 p-4 text-zinc-950 dark:text-zinc-50 lg:w-[480px] lg:flex-none">
         {children}
       </section>
     </main>

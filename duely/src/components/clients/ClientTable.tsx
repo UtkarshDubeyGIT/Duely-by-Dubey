@@ -1,12 +1,14 @@
 "use client";
 
-import { useState } from "react";
-import type { Client } from "@/types";
+import { useMemo, useState } from "react";
+import type { Client, Invoice } from "@/types";
 import { ReliabilityBadge } from "@/components/ui/badge";
 import { EditClientDialog } from "@/components/clients/EditClientDialog";
 import { DeleteClientDialog } from "@/components/clients/DeleteClientDialog";
 import { CreateClientDialog } from "@/components/clients/CreateClientDialog";
-import { Edit2, MoreHorizontal, Trash2 } from "lucide-react";
+import { ClientPaymentHistory } from "@/components/clients/ClientPaymentHistory";
+import { analyzeClientReliability } from "@/lib/reliability";
+import { ChevronDown, ChevronRight, Edit2, MoreHorizontal, Trash2 } from "lucide-react";
 import {
   Table,
   TableBody,
@@ -23,9 +25,35 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-export function ClientTable({ clients }: { clients: Client[] }) {
+export function ClientTable({ clients, invoices }: { clients: Client[]; invoices: Invoice[] }) {
   const [editingClient, setEditingClient] = useState<Client | null>(null);
   const [deletingClient, setDeletingClient] = useState<Client | null>(null);
+  const [expandedClientId, setExpandedClientId] = useState<string | null>(null);
+
+  // Build per-client invoice map
+  const invoicesByClient = useMemo(() => {
+    const map = new Map<string, Invoice[]>();
+    for (const inv of invoices) {
+      const list = map.get(inv.client_id) ?? [];
+      list.push(inv);
+      map.set(inv.client_id, list);
+    }
+    return map;
+  }, [invoices]);
+
+  // Compute reliability analysis per client (derived from real data)
+  const analysisMap = useMemo(() => {
+    const map = new Map<string, ReturnType<typeof analyzeClientReliability>>();
+    for (const client of clients) {
+      const clientInvoices = invoicesByClient.get(client.id) ?? [];
+      map.set(client.id, analyzeClientReliability(clientInvoices));
+    }
+    return map;
+  }, [clients, invoicesByClient]);
+
+  function toggleExpand(clientId: string) {
+    setExpandedClientId((prev) => (prev === clientId ? null : clientId));
+  }
 
   return (
     <div className="space-y-4">
@@ -57,6 +85,7 @@ export function ClientTable({ clients }: { clients: Client[] }) {
         <Table>
           <TableHeader>
             <TableRow>
+              <TableHead className="w-8"></TableHead>
               <TableHead>Name</TableHead>
               <TableHead className="hidden md:table-cell">Company</TableHead>
               <TableHead>Reliability</TableHead>
@@ -68,50 +97,91 @@ export function ClientTable({ clients }: { clients: Client[] }) {
           <TableBody>
             {clients.length === 0 ? (
               <TableRow>
-                <TableCell colSpan={6} className="h-24 text-center text-muted-foreground">
+                <TableCell colSpan={7} className="h-24 text-center text-muted-foreground">
                   No clients found.
                 </TableCell>
               </TableRow>
             ) : (
-              clients.map((client) => (
-                <TableRow key={client.id}>
-                  <TableCell>
-                    <p className="font-medium text-zinc-950 dark:text-zinc-50">{client.name}</p>
-                    <p className="text-xs text-zinc-500 dark:text-zinc-400">{client.email}</p>
-                  </TableCell>
-                  <TableCell className="hidden text-zinc-600 dark:text-zinc-400 md:table-cell">{client.company}</TableCell>
-                  <TableCell><ReliabilityBadge reliability={client.reliability_tag} /></TableCell>
-                  <TableCell className="hidden text-right font-mono font-semibold text-zinc-950 dark:text-zinc-50 md:table-cell">{client.avg_days_late}</TableCell>
-                  <TableCell className="text-right font-mono font-semibold text-zinc-950 dark:text-zinc-50">{client.total_invoices}</TableCell>
-                  <TableCell className="text-right">
-                    <DropdownMenu>
-                      <DropdownMenuTrigger
-                        render={<Button variant="ghost" size="icon" className="h-8 w-8" />}
-                      >
-                          <span className="sr-only">Open menu</span>
-                          <MoreHorizontal className="h-4 w-4" />
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end" className="w-[160px]">
-                        <DropdownMenuItem onClick={() => setEditingClient(client)}>
-                          <div className="flex w-full items-center">
-                            <Edit2 className="h-4 w-4 mr-2" />
-                            Edit Client
-                          </div>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem 
-                          onClick={() => setDeletingClient(client)}
-                          className="text-red-600 focus:bg-red-50 focus:text-red-600 dark:focus:bg-red-950/20"
+              clients.map((client) => {
+                const analysis = analysisMap.get(client.id);
+                const isExpanded = expandedClientId === client.id;
+                // Use computed tag if available, otherwise fall back to stored tag
+                const displayTag = analysis?.tag ?? client.reliability_tag;
+                const displayAvgLate = analysis?.avgDaysLate ?? client.avg_days_late;
+
+                return (
+                  <>
+                    <TableRow
+                      key={client.id}
+                      className={`cursor-pointer transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-900/50 ${isExpanded ? "bg-zinc-50 dark:bg-zinc-900/50" : ""}`}
+                      onClick={() => toggleExpand(client.id)}
+                    >
+                      <TableCell className="w-8 pr-0">
+                        <button
+                          className="flex h-6 w-6 items-center justify-center rounded-md hover:bg-zinc-200 dark:hover:bg-zinc-800 transition-colors"
+                          aria-label={isExpanded ? "Collapse" : "Expand"}
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            toggleExpand(client.id);
+                          }}
                         >
-                          <div className="flex w-full items-center">
-                            <Trash2 className="h-4 w-4 mr-2" />
-                            Delete Client
+                          {isExpanded ? (
+                            <ChevronDown className="h-4 w-4 text-zinc-500" />
+                          ) : (
+                            <ChevronRight className="h-4 w-4 text-zinc-500" />
+                          )}
+                        </button>
+                      </TableCell>
+                      <TableCell>
+                        <p className="font-medium text-zinc-950 dark:text-zinc-50">{client.name}</p>
+                        <p className="text-xs text-zinc-500 dark:text-zinc-400">{client.email}</p>
+                      </TableCell>
+                      <TableCell className="hidden text-zinc-600 dark:text-zinc-400 md:table-cell">{client.company}</TableCell>
+                      <TableCell><ReliabilityBadge reliability={displayTag} /></TableCell>
+                      <TableCell className="hidden text-right font-mono font-semibold text-zinc-950 dark:text-zinc-50 md:table-cell">{displayAvgLate}</TableCell>
+                      <TableCell className="text-right font-mono font-semibold text-zinc-950 dark:text-zinc-50">{client.total_invoices}</TableCell>
+                      <TableCell className="text-right">
+                        <DropdownMenu>
+                          <DropdownMenuTrigger
+                            render={<Button variant="ghost" size="icon" className="h-8 w-8" />}
+                          >
+                              <span className="sr-only">Open menu</span>
+                              <MoreHorizontal className="h-4 w-4" />
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end" className="w-[160px]">
+                            <DropdownMenuItem onClick={(e) => { e.stopPropagation(); setEditingClient(client); }}>
+                              <div className="flex w-full items-center">
+                                <Edit2 className="h-4 w-4 mr-2" />
+                                Edit Client
+                              </div>
+                            </DropdownMenuItem>
+                            <DropdownMenuItem 
+                              onClick={(e) => { e.stopPropagation(); setDeletingClient(client); }}
+                              className="text-red-600 focus:bg-red-50 focus:text-red-600 dark:focus:bg-red-950/20"
+                            >
+                              <div className="flex w-full items-center">
+                                <Trash2 className="h-4 w-4 mr-2" />
+                                Delete Client
+                              </div>
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </TableCell>
+                    </TableRow>
+
+                    {/* Expanded Payment History Row */}
+                    {isExpanded && analysis && (
+                      <TableRow key={`${client.id}-history`} className="hover:bg-transparent">
+                        <TableCell colSpan={7} className="p-0">
+                          <div className="border-t border-zinc-100 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900/30 p-4 sm:p-6 animate-in slide-in-from-top-2 duration-200">
+                            <ClientPaymentHistory analysis={analysis} />
                           </div>
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </TableCell>
-                </TableRow>
-              ))
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </>
+                );
+              })
             )}
           </TableBody>
         </Table>

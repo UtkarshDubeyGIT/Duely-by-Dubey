@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { getInvoices } from "@/lib/data";
 import { createClient } from "@/lib/supabase/server";
+import { recalculateClientReliability } from "@/lib/recalculate-client";
 
 export async function GET(_request: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
@@ -78,6 +79,11 @@ export async function PATCH(request: Request, { params }: { params: Promise<{ id
       .update({ status: "skipped" })
       .eq("invoice_id", id)
       .eq("status", "pending");
+  }
+
+  // Recalculate client reliability after any invoice status change
+  if (body.status && data.client_id) {
+    await recalculateClientReliability(data.client_id);
   }
 
   return NextResponse.json({ data, error: null });

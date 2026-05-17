@@ -20,7 +20,7 @@ export async function POST(request: Request) {
   }
 
   const { data: profile } = await supabase.from("profiles").select("org_id").single();
-  const { data, error } = await supabase.from("clients").insert({ ...parsed.data, org_id: profile?.org_id }).select("*").single();
+  const { data, error } = await supabase.from("clients").insert({ ...parsed.data, org_id: profile?.org_id, reliability_tag: "new", avg_days_late: 0 }).select("*").single();
   if (error) {
     return NextResponse.json({ data: null, error: error.message }, { status: 500 });
   }

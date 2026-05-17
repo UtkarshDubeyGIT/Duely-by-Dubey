@@ -49,9 +49,9 @@ export function MasterSearch() {
   };
 
   if (!mounted) return (
-    <div className="flex w-full max-w-md items-center gap-2 rounded-lg border border-sidebar-border bg-background px-3 py-2 text-muted-foreground transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-900 min-w-0">
+    <div className="flex w-full items-center gap-2 rounded-lg border border-sidebar-border bg-background px-3 py-2 text-muted-foreground transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-900 min-w-0 overflow-hidden">
       <Search className="h-4 w-4 shrink-0" />
-      <span className="text-sm truncate">Search invoices, clients...</span>
+      <span className="text-sm truncate">Search...</span>
     </div>
   );
 
@@ -59,11 +59,11 @@ export function MasterSearch() {
     <>
       <button
         onClick={() => setOpen(true)}
-        className="flex w-full max-w-md items-center gap-2 rounded-lg border border-sidebar-border bg-background px-3 py-2 text-muted-foreground transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-900 min-w-0"
+        className="flex w-full items-center gap-2 rounded-lg border border-sidebar-border bg-background px-3 py-2 text-muted-foreground transition-colors hover:bg-zinc-50 dark:hover:bg-zinc-900 min-w-0 overflow-hidden"
       >
         <Search className="h-4 w-4 shrink-0" />
-        <span className="text-sm truncate">Search invoices, clients...</span>
-        <kbd className="pointer-events-none ml-auto hidden h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100 sm:inline-flex">
+        <span className="text-sm truncate hidden sm:inline">Search...</span>
+        <kbd className="pointer-events-none ml-auto hidden h-5 select-none items-center gap-1 rounded border bg-muted px-1.5 font-mono text-[10px] font-medium text-muted-foreground opacity-100 lg:inline-flex">
           <span className="text-xs">⌘</span>K
         </kbd>
       </button>

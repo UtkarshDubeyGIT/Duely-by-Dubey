@@ -25,7 +25,7 @@ function LoginForm() {
             type="email"
             defaultValue={isDemo ? "demo@duely.tech" : ""}
             placeholder="john@example.com"
-            className="h-9 rounded-lg border border-zinc-200 dark:border-zinc-800 px-3 text-sm outline-none focus:border-indigo-500"
+            className="h-9 w-full rounded-lg border border-zinc-200 dark:border-zinc-800 px-3 text-sm outline-none focus:border-indigo-500"
           />
         </label>
         <label className="grid gap-1.5 text-sm font-medium text-zinc-700 dark:text-zinc-300">
@@ -35,7 +35,7 @@ function LoginForm() {
             type="password"
             defaultValue={isDemo ? "Duely@2025" : ""}
             placeholder="••••••••"
-            className="h-9 rounded-lg border border-zinc-200 dark:border-zinc-800 px-3 text-sm outline-none focus:border-indigo-500"
+            className="h-9 w-full rounded-lg border border-zinc-200 dark:border-zinc-800 px-3 text-sm outline-none focus:border-indigo-500"
           />
         </label>
         {state?.error ? (

@@ -76,7 +76,7 @@ export function CreateInvoiceDialog({ clients, nextInvoiceNumber }: { clients: C
           </Button>
         }
       />
-      <DialogContent className="sm:max-w-2xl">
+      <DialogContent className="w-[calc(100vw-2rem)] max-h-[90dvh] overflow-y-auto sm:max-w-2xl">
         <DialogHeader>
           <DialogTitle>Create invoice</DialogTitle>
         </DialogHeader>

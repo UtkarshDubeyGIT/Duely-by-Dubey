@@ -26,7 +26,7 @@ export function StatsCard({
         </div>
       </CardHeader>
       <CardContent>
-        <div className="font-mono text-2xl font-bold text-zinc-950 dark:text-zinc-50">
+        <div className="font-mono text-xl font-bold text-zinc-950 dark:text-zinc-50 sm:text-2xl truncate">
           {currency ? formatCurrency(value) : value}
         </div>
         <p className={cn("mt-1 text-xs font-medium", trend >= 0 ? "text-green-600" : "text-red-500")}>

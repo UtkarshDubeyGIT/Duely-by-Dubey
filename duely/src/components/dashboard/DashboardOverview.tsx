@@ -16,7 +16,7 @@ import { formatCurrency, formatDate } from "@/lib/utils";
 export function DashboardOverview({ data }: { data: DashboardData }) {
   return (
     <div className="space-y-6">
-      <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+      <div className="grid gap-4 grid-cols-2 xl:grid-cols-4">
         <StatsCard label="Total invoices" value={data.stats.total_invoices} trend={data.stats.total_invoices_trend} icon={FileText} />
         <StatsCard label="Unpaid amount" value={data.stats.unpaid_amount} trend={data.stats.unpaid_amount_trend} icon={DollarSign} currency />
         <StatsCard label="Overdue" value={data.stats.overdue_count} trend={data.stats.overdue_count_trend} icon={AlertTriangle} />
@@ -28,7 +28,9 @@ export function DashboardOverview({ data }: { data: DashboardData }) {
           <CardHeader className="border-b border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950">
             <CardTitle className="text-lg font-semibold text-zinc-950 dark:text-zinc-50">Recent invoices</CardTitle>
           </CardHeader>
-          <div className="overflow-x-auto">
+
+          {/* Desktop table */}
+          <div className="hidden overflow-x-auto sm:block">
             <Table>
               <TableHeader>
                 <TableRow>
@@ -52,15 +54,34 @@ export function DashboardOverview({ data }: { data: DashboardData }) {
               </TableBody>
             </Table>
           </div>
+
+          {/* Mobile card list */}
+          <div className="divide-y divide-zinc-100 dark:divide-zinc-800 sm:hidden">
+            {data.recent_invoices.map((invoice) => (
+              <div key={invoice.id} className="p-4">
+                <div className="flex items-start justify-between gap-3">
+                  <div>
+                    <p className="font-mono font-semibold text-zinc-950 dark:text-zinc-50">{invoice.invoice_number}</p>
+                    <p className="text-sm text-zinc-600 dark:text-zinc-400">{invoice.client?.name}</p>
+                  </div>
+                  <StatusBadge status={invoice.status} />
+                </div>
+                <div className="mt-3 flex items-center justify-between">
+                  <p className="text-xs text-zinc-500 dark:text-zinc-400">Due {formatDate(invoice.due_date)}</p>
+                  <p className="font-mono font-semibold text-zinc-950 dark:text-zinc-50">{formatCurrency(invoice.total_amount, invoice.currency)}</p>
+                </div>
+              </div>
+            ))}
+          </div>
         </Card>
 
         <Card className="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 shadow-sm">
           <CardHeader className="border-b border-zinc-200 dark:border-zinc-800">
             <CardTitle className="text-lg font-semibold text-zinc-950 dark:text-zinc-50">Upcoming reminders</CardTitle>
           </CardHeader>
-          <CardContent className="p-0 divide-y divide-zinc-100">
+          <CardContent className="p-0 divide-y divide-zinc-100 dark:divide-zinc-800">
             {data.upcoming_reminders.map((reminder) => (
-              <div key={reminder.id} className="p-5">
+              <div key={reminder.id} className="p-4 md:p-5">
                 <div className="flex items-center justify-between gap-3">
                   <p className="font-mono text-sm font-semibold text-zinc-950 dark:text-zinc-50">{reminder.invoice?.invoice_number}</p>
                   <ToneBadge tone={reminder.tone} />

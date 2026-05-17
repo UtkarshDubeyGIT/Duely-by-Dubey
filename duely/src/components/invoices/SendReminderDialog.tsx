@@ -43,7 +43,7 @@ export function SendReminderDialog({ invoice, onClose }: { invoice: Invoice; onC
 
   return (
     <Dialog open={true} onOpenChange={(open) => { if (!open) onClose(); }}>
-      <DialogContent className="sm:max-w-lg">
+      <DialogContent className="w-[calc(100vw-2rem)] max-h-[90dvh] overflow-y-auto sm:max-w-lg">
         <DialogHeader>
           <DialogTitle>Send reminder</DialogTitle>
         </DialogHeader>
