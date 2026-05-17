@@ -3,7 +3,6 @@
 import { SiteHeader } from "@/components/shared/SiteHeader";
 import { SiteFooter } from "@/components/shared/SiteFooter";
 import { BlurFade } from "@/components/ui/blur-fade";
-import { MagicCard } from "@/components/ui/magic-card";
 import { AnimatedGradientText } from "@/components/ui/animated-gradient-text";
 import { TextAnimate } from "@/components/ui/text-animate";
 import { ShimmerButton } from "@/components/ui/shimmer-button";
@@ -68,7 +67,7 @@ export default function HowToUsePage() {
       <SiteHeader />
 
       {/* Hero */}
-      <section className="relative overflow-hidden py-20 md:py-28">
+      <section className="relative overflow-hidden py-16 md:py-24">
         <DotPattern
           className={cn(
             "absolute inset-0 opacity-30 dark:opacity-20",
@@ -83,7 +82,7 @@ export default function HowToUsePage() {
           </BlurFade>
 
           <BlurFade delay={0.2} inView>
-            <h1 className="mx-auto mt-5 max-w-4xl font-display text-5xl font-bold leading-[1.02] tracking-[-0.03em] text-[#181c22] dark:text-zinc-50 md:text-7xl">
+            <h1 className="mx-auto mt-5 max-w-4xl font-display text-4xl font-bold leading-[1.08] tracking-[-0.03em] text-[#181c22] dark:text-zinc-50 sm:text-5xl md:text-6xl lg:text-7xl">
               How to use{" "}
               <AnimatedGradientText colorFrom="#4b39e6" colorTo="#22c55e" speed={2}>
                 Duely.
@@ -92,14 +91,14 @@ export default function HowToUsePage() {
           </BlurFade>
 
           <BlurFade delay={0.3} inView>
-            <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-[#4d5157] dark:text-zinc-300 md:text-xl">
+            <p className="mx-auto mt-5 max-w-2xl text-base leading-7 text-[#4d5157] dark:text-zinc-300 sm:text-lg md:text-xl">
               A step-by-step guide to setting up your first invoice and putting your
               entire payment collection on autopilot.
             </p>
           </BlurFade>
 
           <BlurFade delay={0.4} inView>
-            <div className="mt-10 flex justify-center">
+            <div className="mt-8 flex justify-center">
               <Link href="/signup">
                 <ShimmerButton
                   background="rgba(75,57,230,1)"
@@ -115,28 +114,28 @@ export default function HowToUsePage() {
       </section>
 
       {/* Steps */}
-      <section className="mx-auto max-w-7xl px-4 pb-20 md:px-10 md:pb-28">
-        <div className="space-y-24 md:space-y-36">
+      <section className="mx-auto max-w-7xl px-4 py-16 md:px-10 md:py-24">
+        <div className="space-y-20 md:space-y-32">
           {steps.map((step, idx) => {
             const Icon = step.icon;
             return (
               <BlurFade key={idx} delay={0.15} inView direction={idx % 2 === 0 ? "left" : "right"}>
                 <div
-                  className={`flex flex-col items-center gap-12 md:gap-16 ${
+                  className={`flex flex-col items-center gap-10 md:gap-16 ${
                     idx % 2 === 1 ? "md:flex-row-reverse" : "md:flex-row"
                   }`}
                 >
-                  {/* Text */}
-                  <div className="flex-1 w-full space-y-6">
+                  {/* Text Column */}
+                  <div className="flex-1 w-full min-w-0 space-y-5">
                     <div className="flex items-center gap-4">
                       <div
-                        className="flex h-14 w-14 items-center justify-center rounded-2xl text-white text-sm font-bold shadow-lg"
+                        className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl text-white text-sm font-bold shadow-lg"
                         style={{ backgroundColor: step.color }}
                       >
                         {step.number}
                       </div>
                       <div
-                        className="flex h-10 w-10 items-center justify-center rounded-xl"
+                        className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl"
                         style={{ backgroundColor: step.color + "20", color: step.color }}
                       >
                         <Icon className="h-5 w-5" />
@@ -147,16 +146,16 @@ export default function HowToUsePage() {
                       as="h2"
                       animation="blurInUp"
                       by="word"
-                      className="font-display text-3xl font-bold text-[#181c22] dark:text-zinc-50 md:text-4xl"
+                      className="font-display text-2xl font-bold text-[#181c22] dark:text-zinc-50 sm:text-3xl md:text-4xl"
                     >
                       {step.title}
                     </TextAnimate>
 
-                    <p className="text-lg leading-8 text-[#4d5157] dark:text-zinc-300">
+                    <p className="text-base leading-7 text-[#4d5157] dark:text-zinc-300 sm:text-lg">
                       {step.description}
                     </p>
 
-                    <ul className="space-y-2">
+                    <ul className="space-y-2.5">
                       {step.tips.map((tip, tipIdx) => (
                         <li key={tipIdx} className="flex items-center gap-3 text-sm text-[#4d5157] dark:text-zinc-400">
                           <span
@@ -171,28 +170,29 @@ export default function HowToUsePage() {
                     </ul>
                   </div>
 
-                  {/* Screenshot with MagicCard + ShineBorder */}
-                  <div className="flex-1 w-full">
-                    <ShineBorder
-                      className="rounded-2xl overflow-hidden shadow-xl dark:bg-zinc-950 bg-white"
-                      shineColor={[step.color, "#818cf8"]}
-                      borderWidth={2}
-                      duration={10}
+                  {/* Screenshot Column — ShineBorder as overlay inside a relative wrapper */}
+                  <div className="flex-1 w-full min-w-0">
+                    <div
+                      className="relative rounded-2xl overflow-hidden shadow-xl bg-white dark:bg-zinc-950"
+                      style={{ border: `2px solid transparent` }}
                     >
-                      <MagicCard
-                        className="rounded-2xl overflow-hidden"
-                        gradientColor={step.color + "15"}
-                      >
-                        <div className="relative aspect-video w-full overflow-hidden">
-                          <Image
-                            src={step.image}
-                            alt={step.title}
-                            fill
-                            className="object-cover object-left-top transition-transform duration-700 hover:scale-105"
-                          />
-                        </div>
-                      </MagicCard>
-                    </ShineBorder>
+                      {/* ShineBorder used correctly as an absolute overlay */}
+                      <ShineBorder
+                        shineColor={[step.color, "#818cf8"]}
+                        borderWidth={2}
+                        duration={10}
+                      />
+                      {/* Actual image with explicit dimensions */}
+                      <div className="relative w-full" style={{ paddingBottom: "56.25%" }}>
+                        <Image
+                          src={step.image}
+                          alt={step.title}
+                          fill
+                          sizes="(max-width: 768px) 100vw, 50vw"
+                          className="object-cover object-left-top transition-transform duration-700 hover:scale-105"
+                        />
+                      </div>
+                    </div>
                   </div>
                 </div>
               </BlurFade>
@@ -202,16 +202,16 @@ export default function HowToUsePage() {
       </section>
 
       {/* CTA Strip */}
-      <section className="border-t border-[#e5e5e5] dark:border-zinc-800 bg-white dark:bg-zinc-950 py-20">
+      <section className="border-t border-[#e5e5e5] dark:border-zinc-800 bg-white dark:bg-zinc-950 py-16 md:py-24">
         <BlurFade delay={0.1} inView>
           <div className="mx-auto max-w-2xl px-4 text-center">
-            <h2 className="font-display text-3xl font-bold text-[#181c22] dark:text-zinc-50 md:text-4xl">
+            <h2 className="font-display text-2xl font-bold text-[#181c22] dark:text-zinc-50 sm:text-3xl md:text-4xl">
               Ready to stop chasing payments?
             </h2>
-            <p className="mt-4 text-lg text-[#4d5157] dark:text-zinc-300">
+            <p className="mt-4 text-base text-[#4d5157] dark:text-zinc-300 sm:text-lg">
               Join Duely and put your entire follow-up workflow on autopilot.
             </p>
-            <div className="mt-8 flex justify-center gap-4 flex-wrap">
+            <div className="mt-8 flex flex-col items-center gap-3 sm:flex-row sm:justify-center sm:gap-4">
               <Link href="/signup">
                 <ShimmerButton
                   background="rgba(75,57,230,1)"
