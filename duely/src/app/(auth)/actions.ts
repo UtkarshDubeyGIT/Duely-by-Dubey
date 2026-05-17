@@ -56,5 +56,5 @@ export async function signupAction(_previous: unknown, formData: FormData) {
     return { error: error.message };
   }
 
-  redirect("/dashboard");
+  redirect("/login?signup=success");
 }

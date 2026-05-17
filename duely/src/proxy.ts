@@ -2,7 +2,7 @@ import { NextResponse, type NextRequest } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 import { getSupabaseUrl, getSupabaseAnonKey } from "./lib/env";
 
-const publicRoutes = ["/", "/login", "/signup", "/features", "/how-to-use", "/future-upgrades"];
+const publicRoutes = ["/", "/login", "/signup", "/features", "/how-to-use", "/future-upgrades", "/auth/callback"];
 
 export async function proxy(request: NextRequest) {
   let supabaseResponse = NextResponse.next({

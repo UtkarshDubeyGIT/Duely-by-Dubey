@@ -52,7 +52,7 @@ describe("proxy() — public routes (no auth required)", () => {
     getUserResult = { data: { user: null }, error: null };
   });
 
-  const publicPaths = ["/", "/login", "/signup", "/features", "/how-to-use", "/future-upgrades"];
+  const publicPaths = ["/", "/login", "/signup", "/features", "/how-to-use", "/future-upgrades", "/auth/callback"];
 
   for (const path of publicPaths) {
     it(`allows unauthenticated access to ${path}`, async () => {
