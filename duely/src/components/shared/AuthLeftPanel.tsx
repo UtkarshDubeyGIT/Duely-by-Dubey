@@ -105,8 +105,8 @@ export function AuthLeftPanel() {
                 key={label}
                 className="rounded-xl border border-white/10 bg-white/5 p-4 backdrop-blur-sm"
               >
-                <p className="text-2xl font-extrabold text-white tabular-nums">
-                  <NumberTicker value={value} delay={0.2} />
+                <p className="text-2xl font-extrabold tabular-nums" style={{ color: "white" }}>
+                  <NumberTicker value={value} delay={0.2} className="text-white" style={{ color: "white" }} />
                   <span className="text-indigo-400">{suffix}</span>
                 </p>
                 <p className="mt-1 text-xs text-zinc-500">{label}</p>
