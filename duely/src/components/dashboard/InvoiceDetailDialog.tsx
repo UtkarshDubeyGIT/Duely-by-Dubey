@@ -23,7 +23,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { StatusBadge, ToneBadge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import type { Invoice } from "@/types";
 import { formatCurrency, formatDate } from "@/lib/utils";
@@ -116,7 +115,7 @@ export function InvoiceDetailDialog({
       <Dialog open={open} onOpenChange={onOpenChange}>
         <DialogContent className="flex max-h-[92dvh] w-[calc(100vw-1rem)] max-w-[calc(100vw-1rem)] flex-col gap-0 overflow-hidden border-none p-0 shadow-2xl sm:w-[calc(100vw-2rem)] sm:max-w-5xl">
           {/* Header */}
-          <div className="border-b border-zinc-200 bg-zinc-50 px-5 py-5 pr-12 dark:border-zinc-800 dark:bg-zinc-900 sm:px-8 sm:py-6">
+          <div className="shrink-0 border-b border-zinc-200 bg-zinc-50 px-5 py-5 pr-12 dark:border-zinc-800 dark:bg-zinc-900 sm:px-8 sm:py-6">
             <div className="flex min-w-0 flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
               <div className="flex min-w-0 items-center gap-4 sm:gap-5">
                 <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-indigo-600">
@@ -135,7 +134,7 @@ export function InvoiceDetailDialog({
             </div>
           </div>
           
-          <ScrollArea className="flex-1 bg-white dark:bg-zinc-950">
+          <div className="min-h-0 flex-1 overflow-y-auto bg-white dark:bg-zinc-950">
             <div className="p-4 sm:p-6 lg:p-8">
               {loading ? (
                 <div className="py-24 text-center">
@@ -298,7 +297,7 @@ export function InvoiceDetailDialog({
                 </div>
               ) : null}
             </div>
-          </ScrollArea>
+          </div>
         </DialogContent>
       </Dialog>
 
