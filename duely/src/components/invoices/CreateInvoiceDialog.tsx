@@ -88,9 +88,9 @@ export function CreateInvoiceDialog({ clients, nextInvoiceNumber }: { clients: C
             </div>
             <div className="grid gap-2">
               <Label htmlFor="client_id">Client</Label>
-              <Select name="client_id" required>
+              <Select name="client_id" required disabled={clients.length === 0}>
                 <SelectTrigger id="client_id">
-                  <SelectValue placeholder="Select a client" />
+                  <SelectValue placeholder={clients.length === 0 ? "No clients available" : "Select a client"} />
                 </SelectTrigger>
                 <SelectContent>
                   {clients.map((client) => (
@@ -100,6 +100,15 @@ export function CreateInvoiceDialog({ clients, nextInvoiceNumber }: { clients: C
                   ))}
                 </SelectContent>
               </Select>
+              {clients.length === 0 && (
+                <p className="text-xs text-muted-foreground">
+                  No clients yet.{" "}
+                  <a href="/clients" className="underline underline-offset-2 hover:text-foreground transition-colors">
+                    Add a client
+                  </a>{" "}
+                  before creating an invoice.
+                </p>
+              )}
             </div>
             <div className="grid gap-2">
               <Label htmlFor="amount">Amount</Label>
