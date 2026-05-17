@@ -3,7 +3,8 @@ import { createClient } from "@/lib/supabase/server";
 
 export async function POST() {
   // 6. Add null guard: if GROK_API_KEY is not set, return { insight: null, reason: "no_key" }
-  if (!process.env.GROK_API_KEY) {
+  const apiKey = process.env.GROK_API_KEY?.trim();
+  if (!apiKey || apiKey === "" || apiKey === "your_actual_grok_key_here") {
     return NextResponse.json({ insight: null, insights: null, reason: "no_key" });
   }
 
@@ -139,7 +140,7 @@ export async function POST() {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${process.env.GROK_API_KEY}`,
+        "Authorization": `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
         model: "grok-3-mini",
@@ -154,6 +155,9 @@ export async function POST() {
     });
 
     if (!response.ok) {
+      if (response.status === 401 || response.status === 403) {
+        return NextResponse.json({ insight: null, insights: null, reason: "no_key" });
+      }
       throw new Error(`Grok API returned status ${response.status}`);
     }
 

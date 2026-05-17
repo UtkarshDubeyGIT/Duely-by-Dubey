@@ -30,6 +30,8 @@ export function DashboardOverview({ data }: { data: DashboardData }) {
         <StatsCard label="Paid this month" value={data.stats.paid_this_month} trend={data.stats.paid_this_month_trend} icon={CalendarClock} currency />
       </div>
 
+      <InsightsWidget />
+
       <div className="grid gap-6 xl:grid-cols-[1.35fr_0.65fr]">
         <Card className="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 overflow-hidden shadow-sm">
           <CardHeader className="border-b border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950">
@@ -90,26 +92,23 @@ export function DashboardOverview({ data }: { data: DashboardData }) {
           </div>
         </Card>
 
-        <div className="space-y-6">
-          <Card className="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 shadow-sm">
-            <CardHeader className="border-b border-zinc-200 dark:border-zinc-800">
-              <CardTitle className="text-lg font-semibold text-zinc-950 dark:text-zinc-50">Upcoming reminders</CardTitle>
-            </CardHeader>
-            <CardContent className="p-0 divide-y divide-zinc-100 dark:divide-zinc-800">
-              {data.upcoming_reminders.map((reminder) => (
-                <div key={reminder.id} className="p-4 md:p-5">
-                  <div className="flex items-center justify-between gap-3">
-                    <p className="font-mono text-sm font-semibold text-zinc-950 dark:text-zinc-50">{reminder.invoice?.invoice_number}</p>
-                    <ToneBadge tone={reminder.tone} />
-                  </div>
-                  <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">{reminder.invoice?.client?.name}</p>
-                  <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">Scheduled for {formatDate(reminder.scheduled_for)}</p>
+        <Card className="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 shadow-sm">
+          <CardHeader className="border-b border-zinc-200 dark:border-zinc-800">
+            <CardTitle className="text-lg font-semibold text-zinc-950 dark:text-zinc-50">Upcoming reminders</CardTitle>
+          </CardHeader>
+          <CardContent className="p-0 divide-y divide-zinc-100 dark:divide-zinc-800">
+            {data.upcoming_reminders.map((reminder) => (
+              <div key={reminder.id} className="p-4 md:p-5">
+                <div className="flex items-center justify-between gap-3">
+                  <p className="font-mono text-sm font-semibold text-zinc-950 dark:text-zinc-50">{reminder.invoice?.invoice_number}</p>
+                  <ToneBadge tone={reminder.tone} />
                 </div>
-              ))}
-            </CardContent>
-          </Card>
-          <InsightsWidget />
-        </div>
+                <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-400">{reminder.invoice?.client?.name}</p>
+                <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-400">Scheduled for {formatDate(reminder.scheduled_for)}</p>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
       </div>
 
       {selectedId && (
