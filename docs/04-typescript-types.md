@@ -122,6 +122,8 @@ export interface ReminderSchedule {
   status: ScheduledReminderStatus
   paused_reason: string | null
   created_at: string
+  // Joined (used in dashboard)
+  invoice?: Invoice & { client?: Client }
 }
 
 
@@ -154,6 +156,15 @@ export interface UpdateInvoicePayload {
 export interface CreateClientPayload {
   name: string
   email: string
+  phone?: string
+  company?: string
+  address?: string
+  notes?: string
+}
+
+export interface UpdateClientPayload {
+  name?: string
+  email?: string
   phone?: string
   company?: string
   address?: string
@@ -235,3 +246,13 @@ export interface ReminderEmailProps {
   customMessage?: string
 }
 ```
+
+---
+
+## Notes on Current Implementation
+
+- `ReminderSchedule` now includes an optional `invoice` join used by the dashboard's upcoming-reminders widget.
+- `UpdateClientPayload` was added to support the `EditClientDialog` component.
+- Currency defaults to `'INR'` in the UI (updated from original `'USD'` to reflect the rupee symbol change), but the type still accepts any ISO 4217 currency string.
+- The `line_items` field on `Invoice` is stored as JSONB in Postgres and typed as `LineItem[]` in TypeScript.
+- All data fetchers in `src/lib/data.ts` are wrapped with React's `cache()` for deduplication within a single render pass.

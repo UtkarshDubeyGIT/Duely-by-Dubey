@@ -24,13 +24,14 @@ Duely is a smart invoice and payment reminder platform that thinks ahead so smal
 ## Features
 
 ### Core (Assignment Requirements)
-- ✅ **Invoice Management** — Create, view, edit, and track invoices with line items and multi-currency support.
+- ✅ **Invoice Management** — Create, view, edit, and delete invoices with line items and multi-currency support.
 - ✅ **Payment Lifecycle** — Track status from Draft → Pending → Paid / Overdue with real-time updates.
 - ✅ **Real Email Reminders** — Automated notifications powered by Resend with dynamic React Email templates.
 - ✅ **Reminder Activity Log** — Full transparency with a history of every reminder sent, opened, or failed.
 - ✅ **Advanced Search & Filtering** — Filter by status, date ranges, and search by client or invoice number.
 - ✅ **Comprehensive Dashboard** — High-level stats, overdue alerts, upcoming reminders, and payment trend charts.
-- ✅ **Responsive Design** — Fully optimized for mobile, tablet, and desktop using a premium Base UI layout.
+- ✅ **Responsive Design** — Fully optimized for mobile, tablet, and desktop; sidebar collapses to a bottom nav on mobile.
+- ✅ **Dark Mode** — Full dark/light/system theme support via `next-themes`.
 
 ### What Makes Duely Different
 - 🧠 **Smart Reminder Scheduling** — Automatically generates a 5-step sequence of reminders based on the due date.
@@ -38,6 +39,7 @@ Duely is a smart invoice and payment reminder platform that thinks ahead so smal
 - 📊 **Client Reliability Scores** — Categorizes clients (Reliable, Slow, At Risk, New) based on historical payment performance.
 - 🎭 **Tone-Escalating Emails** — Seamlessly transitions from *Friendly* to *Firm* to *Final Notice* as deadlines pass.
 - 💬 **Human-Centric Communication** — Emails are crafted to sound professional and personal, not robotic.
+- 🔒 **Full CRUD for Clients** — Create, edit, and delete clients with dedicated dialogs (shadcn-powered).
 
 ---
 
@@ -46,15 +48,19 @@ Duely is a smart invoice and payment reminder platform that thinks ahead so smal
 | Layer | Technology |
 |-------|-----------|
 | **Framework** | Next.js 16.2 (App Router + Turbopack) |
-| **Language** | TypeScript |
-| **UI Primitive** | Base UI (@base-ui/react) |
+| **Language** | TypeScript 5 |
+| **UI Library** | shadcn/ui (base-nova style) + Base UI (@base-ui/react) |
+| **Animations** | Aceternity UI (WavyBackground, DiaTextReveal) + Motion |
 | **Styling** | Tailwind CSS 4 |
+| **Font** | Geist (next/font/google) |
 | **Database** | Supabase (PostgreSQL) |
 | **Auth** | Supabase Auth (@supabase/ssr) |
 | **Email** | Resend + React Email |
 | **Analytics** | Recharts |
+| **Forms** | React Hook Form + Zod |
 | **Deployment** | Vercel |
 | **Automation** | Vercel Cron |
+| **Theme** | next-themes |
 
 ---
 
@@ -88,13 +94,13 @@ CRON_SECRET=any_random_string
 ```
 
 ### 3. Set up the database
-Run the SQL migrations in order in your Supabase SQL editor:
-- `supabase/migrations/001_init.sql`
-- `supabase/migrations/002_reminders.sql`
-- `supabase/migrations/003_seed_demo_data.sql`
-- `supabase/migrations/004_security_hardening.sql`
-- `supabase/migrations/005_revoke_public_rpc.sql`
-- `supabase/migrations/006_fix_demo_auth_tokens.sql`
+Run the SQL migrations **in order** in your Supabase SQL editor:
+- `supabase/migrations/001_init.sql` — Core tables (organizations, profiles, clients, invoices)
+- `supabase/migrations/002_reminders.sql` — Reminder logs & reminder schedules
+- `supabase/migrations/003_seed_demo_data.sql` — Demo org, clients, and invoices for the test account
+- `supabase/migrations/004_security_hardening.sql` — RLS tightening
+- `supabase/migrations/005_revoke_public_rpc.sql` — Revoke public RPC access
+- `supabase/migrations/006_fix_demo_auth_tokens.sql` — Demo account auth token fix
 
 ### 4. Run locally
 ```bash
@@ -111,18 +117,33 @@ Open [http://localhost:3000](http://localhost:3000) to see the app.
 duely/src/
 ├── app/
 │   ├── (auth)/          # Authentication flows (Login, Signup)
-│   ├── (dashboard)/     # Protected dashboard routes (Invoices, Clients, Reminders)
-│   └── api/             # API endpoints and Cron handlers
+│   ├── (dashboard)/     # Protected dashboard routes (Dashboard, Invoices, Clients, Reminders)
+│   ├── api/             # API endpoints and Cron handlers
+│   ├── features/        # Landing page sections (Features)
+│   ├── how-to-use/      # Landing page sections (How To Use)
+│   ├── future-upgrades/ # Landing page sections (Future Upgrades)
+│   └── page.tsx         # Landing page
 ├── components/
-│   ├── clients/         # Client management & Table logic
-│   ├── dashboard/       # Stats cards and payment charts
-│   ├── invoices/        # Invoice actions, forms, and dialogs
-│   ├── shared/          # Navigation, Sidebar, and UserNav
-│   └── ui/              # Base UI + Tailwind 4 primitives
-├── emails/              # React Email templates
-├── hooks/               # Custom React hooks (use-mobile, etc.)
-├── lib/                 # Core logic (Supabase client, Resend, data fetching)
-└── types/               # TypeScript definitions
+│   ├── clients/         # Client CRUD dialogs (Create, Edit, Delete) & ClientTable
+│   ├── dashboard/       # Stats cards, DashboardOverview, InvoiceDetailDialog, MasterSearch
+│   ├── invoices/        # Invoice table, actions, create/delete dialogs, SendReminderDialog
+│   ├── reminders/       # Reminder timeline components
+│   ├── shared/          # Sidebar, TopBar, MobileNav, UserNav, SiteHeader, SiteFooter
+│   └── ui/              # shadcn primitives + Aceternity components (WavyBackground, etc.)
+├── emails/              # React Email template (PaymentReminder)
+├── hooks/               # Custom React hooks (use-mobile)
+├── lib/                 # Core logic — Supabase, Resend, data fetching, reminder scheduler
+│   ├── data.ts          # React-cache-wrapped server data fetchers (with demo-data fallback)
+│   ├── demo-data.ts     # Static demo data for the unauthenticated demo flow
+│   ├── email.tsx        # Email sending helper
+│   ├── env.ts           # Safe env-var accessors
+│   ├── reminder-scheduler.ts # 5-step reminder schedule generator
+│   ├── resend.ts        # Resend client
+│   ├── supabase/        # Browser & server Supabase clients
+│   ├── utils.ts         # cn, formatCurrency, formatDate, etc.
+│   └── validations.ts   # Zod schemas (invoice, client, reminder, auth)
+├── proxy.ts             # Next.js 16 Edge-compatible auth middleware (replaces middleware.ts)
+└── types/               # TypeScript type definitions (index.ts)
 ```
 
 ---
@@ -130,25 +151,32 @@ duely/src/
 ## Architecture Decisions
 
 **Why Supabase?**
-It provides a robust backend-as-a-service with Auth, Postgres, and Row Level Security (RLS) out of the box. Multi-tenancy is handled natively by `org_id` filters and RLS policies, ensuring strict data isolation.
+It provides a robust backend-as-a-service with Auth, Postgres, and Row Level Security (RLS) out of the box. Multi-tenancy is handled natively by `org_id` filters and RLS policies, ensuring strict data isolation per business.
 
 **Why Next.js 16 + React 19?**
-Leverages the latest React features like Server Actions and optimized rendering, providing a bleeding-edge, high-performance user experience.
+Leverages the latest React features including Server Components, Server Actions, and optimized rendering. The App Router's route groups cleanly separate public landing pages from auth-guarded dashboard pages.
 
-**Why Base UI + Tailwind 4?**
-Base UI provides unstyled, accessible primitives that allow for full design control, while Tailwind 4 offers significant performance improvements and a simplified configuration model.
+**Why shadcn/ui (base-nova) + Tailwind 4?**
+shadcn copies components directly into the codebase giving full ownership and zero bundle bloat. The `base-nova` style provides a modern aesthetic. Tailwind 4 offers significant performance improvements and a simplified config.
+
+**Why `proxy.ts` instead of `middleware.ts`?**
+Next.js 16 Edge runtime requires middleware to use only Edge-compatible APIs. `proxy.ts` exports a `proxy()` function that handles auth-based redirects in a way that is fully compatible with the Vercel Edge runtime and avoids the `MIDDLEWARE_INVOCATION_FAILED` error.
 
 **Why Vercel Cron?**
-Enables serverless automation of smart reminders without managing extra infrastructure. A daily job checks for overdue invoices and triggers the next step in the reminder sequence.
+Enables serverless automation of smart reminders without managing extra infrastructure. A daily job at 9am UTC checks for overdue invoices and triggers the next step in the reminder sequence.
+
+**Why demo-data fallback in `lib/data.ts`?**
+All server-side data fetchers use a React `cache()` wrapper and fall back to a rich set of static demo data (`demo-data.ts`) when Supabase is unavailable or the user is not authenticated. This makes the demo flow seamless without any real data.
 
 ---
 
 ## Security
 
-- **Environment Isolation** — All sensitive keys are managed via environment variables.
+- **Environment Isolation** — All sensitive keys are managed via environment variables; none are committed.
 - **Database Security** — Row Level Security (RLS) is enabled on all tables; public RPC access is revoked.
-- **API Protection** — Critical endpoints (like Cron) are secured with Bearer token authentication.
-- **Auth** — Secure JWT-based sessions managed by Supabase SSR.
+- **API Protection** — The Cron endpoint is secured with `CRON_SECRET` Bearer token authentication.
+- **Auth** — Secure JWT-based sessions managed by Supabase SSR; middleware refreshes sessions on every request.
+- **Service Role Key** — Only used server-side (cron job); never shipped in the client bundle.
 
 ---
 
@@ -157,9 +185,10 @@ Enables serverless automation of smart reminders without managing extra infrastr
 - [ ] Stripe Connect integration for instant payments
 - [ ] SMS reminder support via Twilio
 - [ ] Client-facing payment portal
-- [ ] PDF generation for invoices
+- [ ] PDF generation for invoices (via `@react-pdf/renderer`)
 - [ ] Team collaboration (Multiple users per Org)
-- [ ] QuickBooks/Xero integration
+- [ ] QuickBooks / Xero integration
+- [ ] Email reply webhook (pause reminders when client replies)
 
 ---
 

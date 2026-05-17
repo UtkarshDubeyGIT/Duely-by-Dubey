@@ -1,5 +1,77 @@
 # Duely — Implementation Guide (All Code)
 
+> **⚠️ Note:** This guide was written as the original implementation spec. The actual codebase
+> has evolved significantly. See the **Current Implementation Status** section below for a
+> complete list of divergences before using this guide as reference.
+
+---
+
+## Current Implementation Status (vs Original Spec)
+
+The following lists what is **different** in the actual codebase from what this guide describes.
+
+### Framework & Dependencies
+| Original Spec | Actual Codebase |
+|--------------|-----------------|
+| Next.js 14 App Router | **Next.js 16.2** (App Router + Turbopack) |
+| `@supabase/ssr` (any) | `@supabase/ssr` **^0.10.3** with chunked cookie handling |
+| shadcn/ui (Default/Zinc style) | shadcn/ui **base-nova** style, neutral base color |
+| Inter + JetBrains Mono fonts | **Geist** variable font (single font, `--font-sans`) |
+| No animation libraries | **Aceternity UI** (WavyBackground, DiaTextReveal) + **Motion** (Framer Motion v12) |
+| No theme support | **next-themes** with ThemeProvider and ModeToggle |
+| No mention of Base UI | **@base-ui/react** ^1.4.1 as a primitive layer |
+
+### Auth Middleware
+| Original Spec | Actual Codebase |
+|--------------|-----------------|
+| `middleware.ts` at root using standard Next.js middleware pattern | **`src/proxy.ts`** exports a `proxy()` function + `config` matcher. Root `middleware.ts` imports and delegates to `proxy()`. This is required for Next.js 16 Edge runtime compatibility. |
+| Direct env var access in middleware | **`src/lib/env.ts`** provides `getSupabaseUrl()` / `getSupabaseAnonKey()` — graceful fallback to empty string if missing |
+
+### Data Layer
+| Original Spec | Actual Codebase |
+|--------------|-----------------|
+| No demo data | **`src/lib/data.ts`** wraps all server fetchers with React `cache()` and falls back to **`src/lib/demo-data.ts`** on any error |
+| `src/lib/supabase/middleware.ts` | **Removed** — auth logic is in `src/proxy.ts` |
+| `resend.ts` with simple Resend instance | **`src/lib/email.tsx`** — higher-level email sending helper with the `resend.ts` client as dependency |
+
+### Components (New / Changed)
+| Original Spec | Actual Codebase |
+|--------------|-----------------|
+| `InvoiceStatusBadge.tsx` | Inline in `InvoiceTable` via `Badge` from shadcn |
+| `ReliabilityBadge.tsx` | Inline in `ClientTable` |
+| `InvoiceFilters.tsx` (separate component) | Filters integrated into `InvoiceTable.tsx` |
+| `InvoiceForm.tsx` | **`CreateInvoiceDialog.tsx`** — dialog-based form |
+| No client dialogs | **`CreateClientDialog.tsx`**, **`EditClientDialog.tsx`**, **`DeleteClientDialog.tsx`** |
+| `StatsCard.tsx`, `OverdueList.tsx`, `UpcomingReminders.tsx`, `PaidVsUnpaidChart.tsx` | **`DashboardOverview.tsx`** (combined), **`StatsCard.tsx`** (kept), **`InvoiceDetailDialog.tsx`** (new) |
+| `ReminderTimeline.tsx` | (in `components/reminders/`) |
+| `Sidebar.tsx` (custom) | **Refactored to use shadcn Sidebar primitive** from `components/ui/sidebar.tsx` |
+| No `TopBar` search | **`MasterSearch.tsx`** — global cmd-K search component |
+| No user nav | **`UserNav.tsx`** — user dropdown with sign out |
+| No landing page components | **`SiteHeader.tsx`**, **`SiteFooter.tsx`**, **`BrandLogoLink.tsx`**, **`ModeToggle.tsx`**, **`AppLoader.tsx`**, **`LoadingStates.tsx`** |
+| No Aceternity components | **`wavy-background.tsx`**, **`dia-text-reveal.tsx`** in `components/ui/` |
+
+### Database Migrations
+| Original Spec | Actual Codebase |
+|--------------|-----------------|
+| 2 migrations (001, 002) | **6 migrations** (001–006) |
+| | 003: Demo data seed |
+| | 004: Security hardening |
+| | 005: Revoke public RPC |
+| | 006: Fix demo auth tokens |
+
+### Landing Page
+| Original Spec | Actual Codebase |
+|--------------|-----------------|
+| Not described | Full landing page at `src/app/page.tsx` with WavyBackground hero, features section, reminder flow preview, floating invoice card |
+| | Additional pages: `/features`, `/how-to-use`, `/future-upgrades` (linked from SiteHeader) |
+
+### Currency
+| Original Spec | Actual Codebase |
+|--------------|-----------------|
+| USD default | **INR (₹)** displayed in the UI; invoice currency field still accepts any ISO 4217 code |
+
+---
+
 ## Build Order
 Follow this exact sequence. Each step builds on the previous.
 

@@ -16,16 +16,20 @@
 1. Go to supabase.com → New project
 2. Name it `duely`, choose a region close to your users
 3. Save the database password somewhere safe
-4. Go to Project Settings → API:
+4. Go to **Project Settings → API**:
    - Copy `Project URL` → `NEXT_PUBLIC_SUPABASE_URL`
    - Copy `anon public` key → `NEXT_PUBLIC_SUPABASE_ANON_KEY`
    - Copy `service_role secret` key → `SUPABASE_SERVICE_ROLE_KEY`
-5. Go to SQL Editor → run migrations in order:
+5. Go to **SQL Editor** → run migrations **in order**:
    - Paste and run `001_init.sql`
    - Paste and run `002_reminders.sql`
-6. Go to Authentication → Settings:
-   - Add your site URL: `https://duely.vercel.app`
-   - Add redirect URLs: `https://duely.vercel.app/auth/callback`
+   - Paste and run `003_seed_demo_data.sql`
+   - Paste and run `004_security_hardening.sql`
+   - Paste and run `005_revoke_public_rpc.sql`
+   - Paste and run `006_fix_demo_auth_tokens.sql`
+6. Go to **Authentication → Settings**:
+   - Add your site URL: `https://duely.tech` (or your Vercel URL)
+   - Add redirect URLs: `https://duely.tech/auth/callback`
 
 ---
 
@@ -33,10 +37,10 @@
 
 1. Go to resend.com → Sign up
 2. Add and verify your domain (or use their sandbox for testing)
-3. Go to API Keys → Create API Key
+3. Go to **API Keys** → Create API Key
 4. Copy key → `RESEND_API_KEY`
 5. For testing without a domain: emails can only be sent to your own email
-6. For production: verify a domain and update the `from` address in the remind route
+6. For production: verify a domain and update the `from` address in `src/lib/email.tsx`
 
 ---
 
@@ -53,7 +57,7 @@ git push -u origin main
 Make sure `.env.local` is in `.gitignore`:
 
 ```
-# .gitignore additions
+# .gitignore (already set up)
 .env.local
 .env
 ```
@@ -76,7 +80,7 @@ Use this flow when deploying from GitHub in the Vercel dashboard.
 | Install Command  | `npm install` (default)   |
 | Output Directory | `.next` (default/auto)    |
 
-`Root Directory` must be `duely` because the Next.js app and `vercel.json` live in the `duely/` subfolder, while the repo root contains docs and other assets.
+> **Important:** `Root Directory` must be `duely` because the Next.js app lives in the `duely/` subfolder, while the repo root contains docs and assets.
 
 4. Add all environment variables:
 
@@ -109,8 +113,9 @@ The `vercel.json` cron config runs daily at 9am UTC:
 }
 ```
 
-Vercel automatically calls this with the `Authorization: Bearer <CRON_SECRET>` header.
-Check Vercel Dashboard → Functions → Cron Jobs to verify it's registered.
+The cron endpoint requires a `CRON_SECRET` bearer token. Vercel passes this automatically via the `Authorization` header when triggering the cron.
+
+Check **Vercel Dashboard → Functions → Cron Jobs** to verify it's registered.
 
 To test manually:
 
@@ -121,11 +126,25 @@ curl -X POST https://your-project.vercel.app/api/cron/check-overdue \
 
 ---
 
-## Step 6 — Supabase Auth Redirect (Required)
+## Step 6 — Middleware (proxy.ts) Verification
 
-Add this route for OAuth/magic link callbacks:
+Duely uses `src/proxy.ts` instead of the conventional `middleware.ts` to be compatible with
+Next.js 16's Edge runtime. The root `middleware.ts` imports and delegates to `proxy()`.
 
-### src/app/auth/callback/route.ts
+Verify:
+- `src/proxy.ts` exports a `proxy()` function and a `config` object with a `matcher`
+- Root `middleware.ts` imports `proxy` from `@/proxy` and re-exports `config`
+- The matcher excludes `_next/static`, `_next/image`, `favicon.ico`, and image extensions
+
+If you see `MIDDLEWARE_INVOCATION_FAILED` on Vercel, check that:
+1. No Node.js-only imports are used in the proxy/middleware chain
+2. `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` are set in Vercel env vars
+
+---
+
+## Step 7 — Supabase Auth Redirect
+
+The auth callback route is at `src/app/api/auth/callback/route.ts`:
 
 ```typescript
 import { createClient } from "@/lib/supabase/server";
@@ -165,37 +184,53 @@ Before deploying, confirm all are set in Vercel:
 
 ## Post-Deployment Checklist
 
+- [ ] Landing page loads at `/` with dark mode toggle working
 - [ ] Signup creates a user + organization + profile (check Supabase table editor)
-- [ ] Login redirects to /dashboard
+- [ ] Login redirects to `/dashboard`
+- [ ] "See how it works" auto-fills demo credentials and logs in as demo user
+- [ ] Dashboard stats load correctly (falls back to demo data if Supabase is slow)
 - [ ] Creating an invoice appears in Supabase invoices table
 - [ ] Reminder schedule rows created on invoice creation
 - [ ] Send reminder actually delivers email (check Resend dashboard)
-- [ ] reminder_logs row created after sending
-- [ ] Dashboard stats load correctly
+- [ ] `reminder_logs` row created after sending
+- [ ] Client create/edit/delete dialogs work correctly
 - [ ] Cron endpoint returns 200 with Bearer token, 401 without
-- [ ] App works on mobile screen sizes
+- [ ] App works on mobile screen sizes (bottom nav visible, sidebar hidden)
 - [ ] No env vars or secrets in git history
 
 ---
 
 ## Common Issues
 
+### `MIDDLEWARE_INVOCATION_FAILED` on Vercel
+
+→ This happens when middleware uses Node.js-only APIs not available in the Edge runtime.
+→ Ensure `src/proxy.ts` only imports from `next/server` and `@supabase/ssr` (both Edge-compatible).
+→ Check that `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY` are set in Vercel env vars.
+
 ### "Invalid API key" from Supabase
 
-→ Check you're using anon key for client-side, service role for server-side cron only
+→ Check you're using anon key for client-side, service role for server-side cron only.
 
 ### Email not delivered
 
-→ Check Resend dashboard for delivery status. For testing, use your verified email address as recipient
+→ Check Resend dashboard for delivery status. For testing, use your verified email address as recipient.
+→ Ensure the `from` address in `src/lib/email.tsx` matches your verified Resend domain.
 
 ### RLS blocking data
 
-→ Make sure the `handle_new_user` trigger ran and created the profile row. Check profiles table in Supabase
+→ Make sure the `handle_new_user` trigger ran and created the profile row. Check `profiles` table in Supabase.
 
 ### Cron returning 401
 
-→ Make sure CRON_SECRET in Vercel matches exactly what's in vercel.json header logic
+→ Make sure `CRON_SECRET` in Vercel matches exactly what's used in the cron route's Authorization check.
 
-### Middleware redirect loop
+### Port conflict on local dev
 
-→ Check middleware matcher config — make sure /api/ routes and static files are excluded
+→ If `npm run dev` says port 3000 is in use, kill the conflicting process: `kill <PID>` then re-run.
+→ Or use `PORT=3001 npm run dev` to start on a different port.
+
+### Demo data not showing
+
+→ The demo data fallback in `lib/data.ts` activates when Supabase throws an error or the user is not authenticated.
+→ If real data is missing, check the Supabase RLS policies and that the `handle_new_user` trigger is set up.
