@@ -16,6 +16,7 @@ import {
   BellRing,
   Clock,
   MoreHorizontal,
+  Brain,
 } from "lucide-react";
 
 const steps = [
@@ -58,6 +59,20 @@ const steps = [
     image: "/assets/Screenshots/actions-invoice.png",
     tips: ["One-click mark as paid", "Instant manual reminder", "Full reminder activity log"],
     color: "#ec4899",
+  },
+  {
+    number: "05",
+    icon: Brain,
+    title: "Review Gemini AI financial insights",
+    description:
+      "Get clear, actionable recommendations directly on your dashboard. Duely securely passes organization analytics to Google Gemini to calculate cash flow velocity, flag at-risk clients, and suggest collection workflows automatically.",
+    image: "/assets/Screenshots/dashboard.png",
+    tips: [
+      "No setup required besides GEMINI_API_KEY",
+      "Identifies paying trends and outstanding debts",
+      "Includes precise, actionable advice with no fluff",
+    ],
+    color: "#6366f1",
   },
 ];
 

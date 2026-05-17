@@ -21,6 +21,7 @@ import {
   Sparkles,
   Shield,
   Mail,
+  Brain,
 } from "lucide-react";
 import Image from "next/image";
 
@@ -101,6 +102,37 @@ const features = [
       </div>
     ),
   },
+  {
+    Icon: Brain,
+    name: "Gemini-Powered AI Insights",
+    description:
+      "Unlock deep, actionable financial advice tailored to your business. Duely aggregates payment cycles, invoice timelines, and client behavior, passing them securely to Google Gemini for real-time analysis directly on your dashboard.",
+    href: "/login?demo=true",
+    cta: "Try demo",
+    className: "col-span-3 lg:col-span-3",
+    background: (
+      <div className="absolute right-6 bottom-0 top-12 left-6 lg:left-1/3 lg:-bottom-6 lg:top-4 overflow-hidden rounded-t-2xl border border-zinc-200/50 bg-[#fafafa] dark:bg-zinc-900/50 p-6 opacity-40 transition-all duration-500 group-hover:opacity-90 group-hover:scale-[1.02] shadow-xl">
+        <div className="flex items-center gap-2 border-b border-zinc-200/50 pb-4 mb-4">
+          <Brain className="h-5 w-5 text-indigo-600 animate-pulse" />
+          <span className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">AI Financial Insights</span>
+        </div>
+        <div className="space-y-3 font-mono-ui text-xs text-zinc-600 dark:text-zinc-400">
+          <div className="flex items-start gap-2">
+            <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-indigo-600" />
+            <p>Your average payment collection cycle improved by 3.2 days this month. Keep utilizing automated reminders.</p>
+          </div>
+          <div className="flex items-start gap-2">
+            <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-indigo-600" />
+            <p>Client 'Charm AI' owes ₹12,500.00 and is currently flagged as 'Slow Pay'. Send a firm follow-up.</p>
+          </div>
+          <div className="flex items-start gap-2">
+            <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-indigo-600" />
+            <p>Cash flow projection looks healthy with ₹45,200.00 expected from 4 highly reliable clients next week.</p>
+          </div>
+        </div>
+      </div>
+    ),
+  },
 ];
 
 const capabilities = [
@@ -123,6 +155,11 @@ const capabilities = [
     icon: Shield,
     title: "Client Reliability",
     desc: "Know who pays on time vs who needs chasing.",
+  },
+  {
+    icon: Brain,
+    title: "Gemini AI Insights",
+    desc: "Aggregates real-time organization metrics for automated financial analysis.",
   },
   {
     icon: Mail,

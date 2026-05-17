@@ -37,6 +37,7 @@ Duely is a smart invoice and payment reminder platform that thinks ahead so smal
 - 🧠 **Smart Reminder Scheduling** — Automatically generates a 5-step sequence of reminders based on the due date.
 - ⏸️ **Intelligent Sync** — Automatically cancels reminder sequences when an invoice is marked as Paid or Draft.
 - 📊 **Client Reliability Scores** — Categorises clients (Reliable, Slow, At Risk, New) based on historical payment performance.
+- 🤖 **Google Gemini AI Insights** — Dynamic, real-time financial analysis that aggregates outstanding invoices, payment histories, and client reliability to present 3 actionable dashboard recommendations.
 - 🎭 **Tone-Escalating Emails** — Seamlessly transitions from *Friendly* to *Firm* to *Final Notice* as deadlines pass.
 - 💬 **Human-Centric Communication** — Emails are crafted to sound professional and personal, not robotic.
 - 🔒 **Full CRUD for Clients** — Create, edit, and delete clients with dedicated dialogs (shadcn-powered).
@@ -62,6 +63,7 @@ Duely is a smart invoice and payment reminder platform that thinks ahead so smal
 | **Deployment** | Vercel |
 | **Automation** | Vercel Cron |
 | **Theme** | next-themes |
+| **AI Engine** | Google Gemini (gemini-2.5-flash) |
 
 ---
 
@@ -328,6 +330,7 @@ CI runs automatically on every push via `.github/workflows/ci.yml`.
 - [ ] Team collaboration (Multiple users per Org)
 - [ ] QuickBooks / Xero integration
 - [ ] Email reply webhook (pause reminders when client replies)
+- [ ] AI Predictive Cash Flow v2 (predicting cash flow constraints & suggesting optimal invoicing dates)
 
 ---
 

@@ -65,6 +65,17 @@ const futureFeatures = [
     iconColor: "#4b39e6",
   },
   {
+    title: "AI Predictive Cash Flow v2",
+    description:
+      "Expand our Gemini AI engine to predict cash flow constraints, suggest optimal invoicing dates, and generate personalized negotiation scripts for overdue accounts.",
+    quarter: "Q3 2026",
+    status: "Planned",
+    statusColor: "#f59e0b",
+    icon: Sparkles,
+    bgColor: "#f59e0b20",
+    iconColor: "#f59e0b",
+  },
+  {
     title: "Instant Payouts",
     description:
       "Get access to your funds the same day a client pays. Direct transfer to your debit card or bank account.",

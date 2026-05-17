@@ -7,6 +7,7 @@ import {
   Gauge,
   MailCheck,
   Sparkles,
+  Brain,
 } from "lucide-react";
 import { BrandLogoLink } from "@/components/shared/BrandLogoLink";
 import { ButtonLink } from "@/components/ui/button";
@@ -31,6 +32,11 @@ const features = [
     icon: Gauge,
     title: "Client reliability",
     body: "See who pays on time, who needs nudges, and where payment history is trending.",
+  },
+  {
+    icon: Brain,
+    title: "Gemini AI Insights",
+    body: "Get automatic, intelligent financial analysis and actionable advice directly on your dashboard.",
   },
 ];
 
@@ -231,7 +237,7 @@ export default function LandingPage() {
         <h2 className="font-display text-center text-3xl font-bold tracking-[-0.02em] text-[#181c22] dark:text-zinc-50 md:text-4xl">
           Intelligence built into every invoice
         </h2>
-        <div className="mt-14 grid gap-6 md:grid-cols-3">
+        <div className="mt-14 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
           {features.map((feature) => {
             const Icon = feature.icon;
             return (
@@ -264,6 +270,10 @@ export default function LandingPage() {
           <div className="inline-flex items-center gap-2 rounded-full border border-[#e1e1e1] bg-white dark:bg-zinc-950 px-4 py-2">
             <CheckCircle2 className="h-4 w-4 text-[#22c55e]" />
             Client reliability
+          </div>
+          <div className="inline-flex items-center gap-2 rounded-full border border-[#e1e1e1] bg-white dark:bg-zinc-950 px-4 py-2">
+            <CheckCircle2 className="h-4 w-4 text-[#22c55e]" />
+            Gemini AI financial insights
           </div>
         </div>
       </section>
