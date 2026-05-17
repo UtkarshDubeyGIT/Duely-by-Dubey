@@ -66,7 +66,10 @@ export function AuthLeftPanel() {
       <div className="relative z-10 flex flex-col justify-between h-full">
 
         {/* Logo */}
-        <BrandLogoLink imageClassName="h-18 w-auto brightness-0 invert" />
+        <BrandLogoLink
+          className="-ml-3"
+          imageClassName="h-18 w-auto brightness-0 invert"
+        />
 
         {/* Hero text */}
         <div className="max-w-xl space-y-4">
