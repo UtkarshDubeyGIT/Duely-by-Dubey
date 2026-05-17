@@ -94,7 +94,7 @@ export function CreateInvoiceDialog({ clients, nextInvoiceNumber }: { clients: C
                 required
                 disabled={clients.length === 0}
                 value={selectedClientId}
-                onValueChange={setSelectedClientId}
+                onValueChange={(val) => setSelectedClientId(val ?? "")}
               >
                 <SelectTrigger id="client_id">
                   <SelectValue placeholder={clients.length === 0 ? "No clients available" : "Select a client"}>
