@@ -66,13 +66,15 @@ export async function POST() {
     invoices.forEach((inv) => {
       if (inv.status === "pending" || inv.status === "overdue") {
         const clientId = inv.client_id;
-        if (!clientOwedMap[clientId]) {
-          clientOwedMap[clientId] = {
-            name: inv.client?.name || `Client ${clientId.slice(0, 8)}`,
-            owed: 0,
-          };
+        if (clientId) {
+          if (!clientOwedMap[clientId]) {
+            clientOwedMap[clientId] = {
+              name: inv.client?.name || `Client ${clientId.slice(0, 8)}`,
+              owed: 0,
+            };
+          }
+          clientOwedMap[clientId].owed += Number(inv.total_amount || 0);
         }
-        clientOwedMap[clientId].owed += Number(inv.total_amount || 0);
       }
     });
 
@@ -101,11 +103,14 @@ export async function POST() {
     const reminderCountThisMonth = reminderLogs ? reminderLogs.length : 0;
 
     // Average days to payment across paid invoices
-    const paidInvoices = invoices.filter((inv) => inv.status === "paid" && inv.paid_date);
+    const paidInvoices = invoices.filter((inv) => inv.status === "paid" && inv.paid_date && inv.issued_date);
     const avgDaysToPayment = paidInvoices.length > 0
       ? paidInvoices.reduce((sum, inv) => {
           const issued = new Date(inv.issued_date);
           const paid = new Date(inv.paid_date!);
+          if (isNaN(issued.getTime()) || isNaN(paid.getTime())) {
+            return sum;
+          }
           const diffTime = paid.getTime() - issued.getTime();
           const diffDays = Math.max(0, Math.round(diffTime / (1000 * 60 * 60 * 24)));
           return sum + diffDays;

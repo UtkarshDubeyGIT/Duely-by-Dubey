@@ -21,7 +21,9 @@ export function InsightsWidget() {
         method: "POST",
       });
       if (!res.ok) {
-        throw new Error("Failed to fetch insights");
+        const errorData = await res.json().catch(() => null);
+        const serverError = errorData?.error || `Server responded with status ${res.status}`;
+        throw new Error(serverError);
       }
       const data = await res.json();
       if (data.reason === "no_data") {
@@ -37,7 +39,8 @@ export function InsightsWidget() {
       }
     } catch (err) {
       console.error(err);
-      setError("Could not load insights. Try refreshing.");
+      const serverMsg = err instanceof Error ? err.message : "";
+      setError(serverMsg ? `Could not load insights: ${serverMsg}` : "Could not load insights. Try refreshing.");
     } finally {
       setLoading(false);
     }
