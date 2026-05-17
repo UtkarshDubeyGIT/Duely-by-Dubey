@@ -5,7 +5,6 @@ import { usePathname } from "next/navigation";
 import { ModeToggle } from "@/components/shared/ModeToggle";
 import { UserNav } from "@/components/shared/UserNav";
 import { MasterSearch } from "@/components/dashboard/MasterSearch";
-import { SidebarTrigger } from "@/components/ui/sidebar";
 
 export function TopBar() {
   const pathname = usePathname();
@@ -22,9 +21,6 @@ export function TopBar() {
 
   return (
     <header className="flex h-16 md:h-20 shrink-0 items-center gap-2 border-b border-sidebar-border bg-sidebar px-3 md:px-6">
-      {/* Sidebar trigger — visible on mobile when sidebar is hidden */}
-      <SidebarTrigger className="shrink-0 h-8 w-8 md:hidden" />
-
       {/* Page title */}
       {title ? (
         <h1 className="shrink-0 truncate text-base font-bold text-sidebar-foreground md:text-2xl lg:text-3xl">
