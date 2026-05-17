@@ -10,7 +10,6 @@ import {
   Clock,
   TrendingUp,
   Zap,
-  ShieldCheck,
 } from "lucide-react";
 
 /* ─── tiny data ─────────────────────────────────────────── */
@@ -24,7 +23,6 @@ const features = [
   { icon: Zap, text: "Instant invoice generation" },
   { icon: Clock, text: "Automated payment reminders" },
   { icon: TrendingUp, text: "Revenue analytics at a glance" },
-  { icon: ShieldCheck, text: "Secure & encrypted data" },
 ];
 
 /* ─── mock invoice cards ────────────────────────────────── */
