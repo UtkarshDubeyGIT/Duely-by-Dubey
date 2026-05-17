@@ -2,9 +2,9 @@ import { NextResponse } from "next/server";
 import { createClient } from "@/lib/supabase/server";
 
 export async function POST() {
-  // 6. Add null guard: if GROK_API_KEY is not set, return { insight: null, reason: "no_key" }
-  const apiKey = process.env.GROK_API_KEY?.trim();
-  if (!apiKey || apiKey === "" || apiKey === "your_actual_grok_key_here") {
+  // Add null guard: if GEMINI_API_KEY is not set, return { insight: null, reason: "no_key" }
+  const apiKey = process.env.GEMINI_API_KEY?.trim();
+  if (!apiKey || apiKey === "" || apiKey === "your_actual_gemini_key_here") {
     return NextResponse.json({ insight: null, insights: null, reason: "no_key" });
   }
 
@@ -140,15 +140,15 @@ export async function POST() {
       "actionable insights. Be direct, no fluff. Each insight should be " +
       "1-2 sentences max. Format as a JSON array of exactly 3 strings.";
 
-    // 4. Call Grok API
-    const response = await fetch("https://api.x.ai/v1/chat/completions", {
+    // 4. Call Gemini OpenAI-compatible API
+    const response = await fetch("https://generativelanguage.googleapis.com/v1beta/openai/chat/completions", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         "Authorization": `Bearer ${apiKey}`,
       },
       body: JSON.stringify({
-        model: "grok-3-mini",
+        model: "gemini-2.5-flash",
         messages: [
           { role: "system", content: systemPrompt },
           { role: "user", content: JSON.stringify(businessData) },
@@ -163,7 +163,7 @@ export async function POST() {
       if (response.status === 401 || response.status === 403) {
         return NextResponse.json({ insight: null, insights: null, reason: "no_key" });
       }
-      throw new Error(`Grok API returned status ${response.status}`);
+      throw new Error(`Gemini API returned status ${response.status}`);
     }
 
     const resultData = await response.json();

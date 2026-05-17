@@ -109,7 +109,7 @@ export function InsightsWidget() {
       ) : reason === "no_key" ? (
         <div className="rounded-lg bg-zinc-100 dark:bg-zinc-900/50 p-4 border border-zinc-200/50 dark:border-zinc-800/50 flex items-center justify-center min-h-[100px]">
           <span className="text-sm text-zinc-500 dark:text-zinc-400 text-center font-medium">
-            AI insights unavailable — GROK_API_KEY not configured.
+            AI insights unavailable — GEMINI_API_KEY not configured.
           </span>
         </div>
       ) : insights && insights.length > 0 ? (
@@ -128,7 +128,7 @@ export function InsightsWidget() {
             ))}
           </div>
           <div className="mt-4 text-right text-[10px] sm:text-xs text-zinc-400 dark:text-zinc-500 font-medium">
-            Generated just now · Powered by Grok
+            Generated just now · Powered by Gemini
           </div>
         </div>
       ) : null}
