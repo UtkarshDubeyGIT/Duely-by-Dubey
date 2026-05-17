@@ -134,11 +134,11 @@ export async function POST() {
     };
 
     // 3. Build a system prompt
-    const systemPrompt =
-      "You are a sharp, concise financial advisor for small businesses. " +
-      "Analyze the following invoice and payment data and give 3 specific, " +
-      "actionable insights. Be direct, no fluff. Each insight should be " +
-      "1-2 sentences max. Format as a JSON array of exactly 3 strings.";
+    const systemPrompt = `You are a concise financial advisor for small businesses.
+Analyze the business data and return ONLY a valid JSON array of 
+exactly 3 strings. Each string is one actionable insight, 1-2 
+sentences max. No markdown, no explanation, no keys — just a raw 
+JSON array like: ["insight one", "insight two", "insight three"]`;
 
     // 4. Call Gemini OpenAI-compatible API
     const response = await fetch("https://generativelanguage.googleapis.com/v1beta/openai/chat/completions", {
@@ -166,58 +166,52 @@ export async function POST() {
       throw new Error(`Gemini API returned status ${response.status}`);
     }
 
-    const resultData = await response.json();
-    const content = resultData.choices?.[0]?.message?.content || "";
+    const responseData = await response.json();
+    const rawText = responseData.choices?.[0]?.message?.content 
+      ?? responseData.candidates?.[0]?.content?.parts?.[0]?.text 
+      ?? ""
 
-    let insights: string[] = [];
+    let insights: string[] = []
+
     try {
-      const parsed = JSON.parse(content);
+      // Strip markdown code fences if present
+      const cleaned = rawText
+        .replace(/```json/g, "")
+        .replace(/```/g, "")
+        .trim()
+
+      const parsed = JSON.parse(cleaned)
+
       if (Array.isArray(parsed)) {
-        insights = parsed;
-      } else if (parsed && typeof parsed === "object") {
-        const possibleArray = parsed.insights || parsed.data || Object.values(parsed)[0];
-        if (Array.isArray(possibleArray)) {
-          insights = possibleArray;
-        } else {
-          insights = Object.values(parsed).filter((val) => typeof val === "string") as string[];
-        }
+        insights = parsed.slice(0, 3)
+      } else if (parsed.insights && Array.isArray(parsed.insights)) {
+        insights = parsed.insights.slice(0, 3)
+      } else if (parsed.actions && Array.isArray(parsed.actions)) {
+        insights = parsed.actions.slice(0, 3)
+      } else {
+        const firstArray = Object.values(parsed).find(v => Array.isArray(v))
+        if (firstArray) insights = (firstArray as string[]).slice(0, 3)
       }
     } catch {
-      // Split raw text into chunks if parsing fails
-      insights = content
-        .split("\n")
-        .map((s: string) => s.trim())
-        .filter((s: string) => s.length > 0);
+      // Not valid JSON — split by newline or numbered list pattern
+      insights = rawText
+        .split(/\n+/)
+        .map((s: string) => s.replace(/^[\d\.\-\*\[\]\"]+\s*/, "").trim())
+        .filter((s: string) => s.length > 20)
+        .slice(0, 3)
     }
 
-    // Safe fallbacks to ensure exactly 3 strings
-    if (!Array.isArray(insights) || insights.length === 0) {
-      insights = content
-        .split(/[.!?]\s+/)
-        .map((s: string) => s.trim())
-        .filter((s: string) => s.length > 0);
+    // Fallback if still empty
+    if (insights.length === 0) {
+      insights = [rawText.slice(0, 200)]
     }
 
-    insights = insights
-      .map((s: string) => s.replace(/^[-*•\d.\s]+/, "").replace(/^["']|["']$/g, "").trim())
-      .filter((s: string) => s.length > 0);
-
-    const fallbacks = [
-      "Send friendly reminders to clients with outstanding balances to improve your monthly cash flow.",
-      "Consider setting up automated invoice schedules to ensure prompt billing cycles.",
-      "Keep an eye on overdue payments and review the credit terms offered to late payers.",
-    ];
-
+    // Pad to exactly 3 if fewer returned
     while (insights.length < 3) {
-      insights.push(fallbacks[insights.length] || fallbacks[0]);
+      insights.push(insights[insights.length - 1])
     }
-    insights = insights.slice(0, 3);
 
-    // 5. Return: { insights: string[], generatedAt: string }
-    return NextResponse.json({
-      insights,
-      generatedAt: new Date().toISOString(),
-    });
+    return NextResponse.json({ insights, generatedAt: new Date().toISOString() })
   } catch (error) {
     console.error("Error generating insights:", error);
     return NextResponse.json(
