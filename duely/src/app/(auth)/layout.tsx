@@ -8,7 +8,7 @@ export default function AuthLayout({
 }) {
   return (
     <main className="flex min-h-screen bg-zinc-950 text-white">
-      <div className="absolute top-4 right-4 z-50">
+      <div className="absolute top-4 right-4 z-50 rounded-xl bg-white/80 dark:bg-zinc-900/80 border border-zinc-200 dark:border-zinc-700 backdrop-blur-sm shadow-sm">
         <ModeToggle />
       </div>
 
