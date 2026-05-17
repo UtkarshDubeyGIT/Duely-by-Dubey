@@ -46,3 +46,5 @@ duely/*.tsbuildinfo
 /package-lock.json
 
 Icon
+.vercel
+.env*.local

@@ -22,7 +22,7 @@ import {
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { StatusBadge, ToneBadge } from "@/components/ui/badge";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Separator } from "@/components/ui/separator";
 import type { Invoice } from "@/types";
@@ -114,32 +114,29 @@ export function InvoiceDetailDialog({
   return (
     <>
       <Dialog open={open} onOpenChange={onOpenChange}>
-        <DialogContent className="max-w-5xl max-h-[90vh] p-0 flex flex-col gap-0 border-none shadow-2xl">
+        <DialogContent className="flex max-h-[92dvh] w-[calc(100vw-1rem)] max-w-[calc(100vw-1rem)] flex-col gap-0 overflow-hidden border-none p-0 shadow-2xl sm:w-[calc(100vw-2rem)] sm:max-w-5xl">
           {/* Header */}
-          <div className="px-10 py-6 bg-zinc-50 dark:bg-zinc-900 border-b border-zinc-200 dark:border-zinc-800">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-5">
-                <div className="h-12 w-12 bg-indigo-600 rounded-xl flex items-center justify-center">
+          <div className="border-b border-zinc-200 bg-zinc-50 px-5 py-5 pr-12 dark:border-zinc-800 dark:bg-zinc-900 sm:px-8 sm:py-6">
+            <div className="flex min-w-0 flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+              <div className="flex min-w-0 items-center gap-4 sm:gap-5">
+                <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-indigo-600">
                   <ReceiptText className="h-6 w-6 text-white" />
                 </div>
-                <div>
-                  <DialogTitle className="text-2xl font-bold text-zinc-900 dark:text-zinc-50 tracking-tight">
+                <div className="min-w-0">
+                  <DialogTitle className="break-words text-2xl font-bold tracking-tight text-zinc-900 dark:text-zinc-50 sm:text-3xl">
                     {invoice?.invoice_number || "Invoice Details"}
                   </DialogTitle>
-                  <p className="text-sm text-zinc-500 font-medium">{invoice?.client?.name || '...'}</p>
+                  <p className="mt-1 truncate text-sm font-medium text-zinc-500">{invoice?.client?.name || '...'}</p>
                 </div>
               </div>
-              <div className="flex items-center gap-4">
+              <div className="flex shrink-0 items-center">
                 {invoice && <StatusBadge status={invoice.status} />}
-                <Button variant="ghost" onClick={() => onOpenChange(false)} size="icon" className="rounded-full h-10 w-10">
-                  <span className="sr-only">Close</span>
-                </Button>
               </div>
             </div>
           </div>
           
           <ScrollArea className="flex-1 bg-white dark:bg-zinc-950">
-            <div className="p-10">
+            <div className="p-4 sm:p-6 lg:p-8">
               {loading ? (
                 <div className="py-24 text-center">
                   <div className="inline-block h-6 w-6 animate-spin rounded-full border-2 border-solid border-indigo-600 border-r-transparent" />
@@ -151,40 +148,40 @@ export function InvoiceDetailDialog({
                   <p className="font-semibold text-zinc-900 dark:text-zinc-50">{error}</p>
                 </div>
               ) : invoice ? (
-                <div className="grid grid-cols-1 lg:grid-cols-5 gap-10">
+                <div className="grid grid-cols-1 gap-5 xl:grid-cols-[minmax(0,1fr)_minmax(18rem,22rem)] xl:gap-6">
                   {/* Left Column */}
-                  <div className="lg:col-span-3 space-y-8">
-                    <Card className="bg-zinc-50/50 dark:bg-zinc-900/50 border-zinc-100 dark:border-zinc-800">
-                      <CardHeader>
+                  <div className="min-w-0 space-y-5">
+                    <Card className="border-zinc-100 bg-zinc-50/50 dark:border-zinc-800 dark:bg-zinc-900/50">
+                      <CardHeader className="px-5 sm:px-6">
                         <CardTitle className="text-base flex items-center gap-2">
                           <Info className="h-4 w-4 text-zinc-400"/>
                           Invoice Overview
                         </CardTitle>
                       </CardHeader>
-                      <CardContent className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-6">
-                        <div className="space-y-1">
+                      <CardContent className="grid grid-cols-1 gap-4 px-5 sm:grid-cols-2 sm:gap-x-6 sm:gap-y-5 sm:px-6">
+                        <div className="min-w-0 space-y-1 rounded-lg border border-zinc-200/70 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-950 sm:col-span-2">
                           <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Total</p>
-                          <p className="text-2xl font-bold font-mono text-indigo-600 dark:text-indigo-400">
+                          <p className="break-words font-mono text-2xl font-bold leading-tight text-indigo-600 dark:text-indigo-400 sm:text-3xl">
                             {formatCurrency(invoice.total_amount, invoice.currency)}
                           </p>
                         </div>
-                        <div className="space-y-1">
+                        <div className="min-w-0 space-y-1 rounded-lg border border-zinc-200/70 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-950">
                           <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Due Date</p>
-                          <p className="text-md font-semibold text-zinc-800 dark:text-zinc-200">{formatDate(invoice.due_date)}</p>
+                          <p className="text-base font-semibold leading-snug text-zinc-800 dark:text-zinc-200">{formatDate(invoice.due_date)}</p>
                         </div>
-                        <div className="space-y-1">
+                        <div className="min-w-0 space-y-1 rounded-lg border border-zinc-200/70 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-950">
                           <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Client</p>
-                          <p className="text-md font-semibold text-zinc-800 dark:text-zinc-200">{invoice.client?.name}</p>
+                          <p className="break-words text-base font-semibold leading-snug text-zinc-800 dark:text-zinc-200">{invoice.client?.name}</p>
                         </div>
-                        <div className="space-y-1">
+                        <div className="min-w-0 space-y-1 rounded-lg border border-zinc-200/70 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-950">
                           <p className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">Issued On</p>
-                          <p className="text-md font-semibold text-zinc-800 dark:text-zinc-200">{formatDate(invoice.issued_date)}</p>
+                          <p className="text-base font-semibold leading-snug text-zinc-800 dark:text-zinc-200">{formatDate(invoice.issued_date)}</p>
                         </div>
                       </CardContent>
                     </Card>
 
                     <Card>
-                      <CardHeader>
+                      <CardHeader className="px-5 sm:px-6">
                         <CardTitle className="text-base flex items-center gap-2">
                           <ListOrdered className="h-4 w-4 text-zinc-400" />
                           Line Items
@@ -196,8 +193,10 @@ export function InvoiceDetailDialog({
                             <tbody className="divide-y divide-zinc-100 dark:divide-zinc-800">
                               {invoice.line_items?.map((item) => (
                                 <tr key={item.id}>
-                                  <td className="px-6 py-4 font-semibold text-zinc-800 dark:text-zinc-200">{item.description}</td>
-                                  <td className="px-6 py-4 text-right font-mono font-bold text-zinc-800 dark:text-zinc-200">{formatCurrency(item.amount, invoice.currency)}</td>
+                                  <td className="min-w-0 px-5 py-4 font-semibold text-zinc-800 dark:text-zinc-200 sm:px-6">
+                                    <span className="block break-words">{item.description}</span>
+                                  </td>
+                                  <td className="whitespace-nowrap px-5 py-4 text-right font-mono font-bold text-zinc-800 dark:text-zinc-200 sm:px-6">{formatCurrency(item.amount, invoice.currency)}</td>
                                 </tr>
                               ))}
                             </tbody>
@@ -206,13 +205,13 @@ export function InvoiceDetailDialog({
                       </CardContent>
                     </Card>
 
-                     <Card className="border-indigo-500/10 dark:border-indigo-500/20 bg-indigo-50/20 dark:bg-indigo-950/10">
-                      <CardHeader>
+                     <Card className="border-indigo-500/10 bg-indigo-50/20 dark:border-indigo-500/20 dark:bg-indigo-950/10">
+                      <CardHeader className="px-5 sm:px-6">
                         <CardTitle className="text-base">Management Actions</CardTitle>
                       </CardHeader>
-                      <CardContent className="flex flex-wrap gap-4">
+                      <CardContent className="grid gap-3 px-5 sm:grid-cols-3 sm:px-6">
                         <Button 
-                          className="flex-1 h-11 font-bold" 
+                          className="h-11 w-full font-bold" 
                           variant={invoice.status === "paid" ? "outline" : "accent"}
                           onClick={() => updateStatus(invoice.status === "paid" ? "pending" : "paid")}
                           disabled={updating}
@@ -222,7 +221,7 @@ export function InvoiceDetailDialog({
                         </Button>
                         <Button 
                           variant="outline"
-                          className="flex-1 h-11 font-bold bg-white dark:bg-zinc-900"
+                          className="h-11 w-full bg-white font-bold dark:bg-zinc-900"
                           onClick={() => setShowReminder(true)}
                         >
                           <Send className="mr-2 h-4 w-4" />
@@ -230,7 +229,7 @@ export function InvoiceDetailDialog({
                         </Button>
                         <Button 
                           variant="destructive"
-                          className="h-11 font-bold"
+                          className="h-11 w-full font-bold"
                           onClick={() => setShowDelete(true)}
                           disabled={updating}
                         >
@@ -242,15 +241,15 @@ export function InvoiceDetailDialog({
                   </div>
                   
                   {/* Right Column */}
-                  <div className="lg:col-span-2">
+                  <div className="min-w-0">
                     <Card>
-                      <CardHeader>
+                      <CardHeader className="px-5 sm:px-6">
                         <CardTitle className="text-base flex items-center gap-2">
                           <History className="h-4 w-4 text-zinc-400" />
                           Activity Log
                         </CardTitle>
                       </CardHeader>
-                      <CardContent className="space-y-6">
+                      <CardContent className="space-y-6 px-5 sm:px-6">
                         <div>
                           <h4 className="text-xs font-bold uppercase tracking-wider text-zinc-400 mb-4">Communication History</h4>
                           {!invoice.reminder_logs?.length ? (
@@ -258,12 +257,12 @@ export function InvoiceDetailDialog({
                           ) : (
                             <div className="space-y-4">
                               {invoice.reminder_logs.map((log) => (
-                                <div key={log.id} className="flex gap-4 items-center">
-                                  <div className="h-9 w-9 rounded-full bg-zinc-100 dark:bg-zinc-800 flex items-center justify-center shrink-0">
+                                <div key={log.id} className="flex min-w-0 flex-col gap-3 rounded-lg bg-zinc-50 p-3 dark:bg-zinc-900/50 sm:flex-row sm:items-center">
+                                  <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-zinc-100 dark:bg-zinc-800">
                                     <Mail className="h-4 w-4 text-zinc-500" />
                                   </div>
-                                  <div className="flex-1">
-                                    <p className="text-sm font-medium text-zinc-800 dark:text-zinc-200">Reminder Sent <span className="text-zinc-500">on {formatDate(log.sent_at)}</span></p>
+                                  <div className="min-w-0 flex-1">
+                                    <p className="text-sm font-medium leading-snug text-zinc-800 dark:text-zinc-200">Reminder Sent <span className="text-zinc-500">on {formatDate(log.sent_at)}</span></p>
                                   </div>
                                   <ToneBadge tone={log.tone} />
                                 </div>
@@ -279,8 +278,8 @@ export function InvoiceDetailDialog({
                           ) : (
                             <div className="space-y-3">
                               {invoice.reminder_schedule?.filter(s => s.status === "pending").map((item) => (
-                                <div key={item.id} className="group flex items-center justify-between p-3 rounded-lg bg-zinc-50 dark:bg-zinc-900/50">
-                                  <div className="flex items-center gap-3">
+                                <div key={item.id} className="group flex min-w-0 flex-col gap-3 rounded-lg bg-zinc-50 p-3 dark:bg-zinc-900/50 sm:flex-row sm:items-center sm:justify-between">
+                                  <div className="flex min-w-0 items-center gap-3">
                                     <Calendar className="h-4 w-4 text-zinc-400" />
                                     <span className="text-xs font-semibold text-zinc-800 dark:text-zinc-200">{formatDate(item.scheduled_for)}</span>
                                   </div>
