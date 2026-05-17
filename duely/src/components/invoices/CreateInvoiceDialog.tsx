@@ -25,6 +25,7 @@ export function CreateInvoiceDialog({ clients, nextInvoiceNumber }: { clients: C
   const [open, setOpen] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [selectedClientId, setSelectedClientId] = useState<string>("");
 
   async function onSubmit(formData: FormData) {
     setLoading(true);
@@ -88,9 +89,19 @@ export function CreateInvoiceDialog({ clients, nextInvoiceNumber }: { clients: C
             </div>
             <div className="grid gap-2">
               <Label htmlFor="client_id">Client</Label>
-              <Select name="client_id" required disabled={clients.length === 0}>
+              <Select
+                name="client_id"
+                required
+                disabled={clients.length === 0}
+                value={selectedClientId}
+                onValueChange={setSelectedClientId}
+              >
                 <SelectTrigger id="client_id">
-                  <SelectValue placeholder={clients.length === 0 ? "No clients available" : "Select a client"} />
+                  <SelectValue placeholder={clients.length === 0 ? "No clients available" : "Select a client"}>
+                    {selectedClientId
+                      ? (clients.find((c) => c.id === selectedClientId)?.name ?? "Select a client")
+                      : null}
+                  </SelectValue>
                 </SelectTrigger>
                 <SelectContent>
                   {clients.map((client) => (
