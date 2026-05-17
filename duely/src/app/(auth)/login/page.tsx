@@ -27,6 +27,7 @@ function LoginForm() {
             </p>
             <p className="mt-0.5 text-xs text-emerald-700 dark:text-emerald-400">
               Please check your inbox and verify your email before logging in.
+              If you don&apos;t see it, check your <span className="font-medium">spam or junk</span> folder.
             </p>
           </div>
         </div>
