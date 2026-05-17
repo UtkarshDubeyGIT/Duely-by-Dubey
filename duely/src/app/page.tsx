@@ -81,15 +81,15 @@ export default function LandingPage() {
           </div>
         </header>
 
-        <div className="relative mx-auto max-w-7xl px-4 pb-20 pt-14 md:px-10 md:pb-28 md:pt-20">
-          <WavyBackground
-            backgroundFill="transparent"
-            waveOpacity={0.3}
-            colors={["#4b39e6", "#22c55e", "#38bdf8", "#818cf8", "#c084fc"]}
-            containerClassName="absolute inset-0 h-full w-full z-0 pointer-events-none"
-            className="hidden"
-          />
-          <div className="relative z-10 mx-auto flex max-w-4xl flex-col items-center text-center">
+        <WavyBackground
+          backgroundFill="transparent"
+          waveOpacity={0.3}
+          colors={["#4b39e6", "#22c55e", "#38bdf8", "#818cf8", "#c084fc"]}
+          containerClassName="absolute inset-x-0 top-0 h-[450px] md:h-[550px] z-0 pointer-events-none"
+          className="hidden"
+        />
+        <div className="relative z-10 mx-auto max-w-7xl px-4 pb-20 pt-14 md:px-10 md:pb-28 md:pt-20">
+          <div className="mx-auto flex max-w-4xl flex-col items-center text-center">
             <h1 className="font-display text-5xl font-bold leading-[1.02] tracking-[-0.03em] text-[#181c22] dark:text-zinc-50 md:text-7xl">
               Get paid on time.
               <span className="block text-[#4b39e6]">Every time.</span>
