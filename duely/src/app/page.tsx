@@ -11,7 +11,10 @@ import {
 import { BrandLogoLink } from "@/components/shared/BrandLogoLink";
 import { ButtonLink } from "@/components/ui/button";
 import { ModeToggle } from "@/components/shared/ModeToggle";
+import { SiteHeader } from "@/components/shared/SiteHeader";
+import { SiteFooter } from "@/components/shared/SiteFooter";
 import { WavyBackground } from "@/components/ui/wavy-background";
+import { DiaTextReveal } from "@/components/ui/dia-text-reveal";
 
 const features = [
   {
@@ -57,42 +60,22 @@ export default function LandingPage() {
     <main className="min-h-screen bg-[#f9f9f7] dark:bg-background text-[#1a1c1c] dark:text-foreground">
       <section className="relative overflow-hidden">
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_25%,rgba(75,57,230,0.12),transparent_58%),radial-gradient(circle_at_85%_78%,rgba(34,197,94,0.08),transparent_28%)]" />
-        <header className="sticky top-0 z-50 border-b border-[#d8d8d8]/80 dark:border-[#d8d8d8]/20 bg-white dark:bg-zinc-950/75 dark:bg-background/80 backdrop-blur-md">
-          <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-4 md:px-10">
-            <BrandLogoLink
-              priority
-              imageClassName="h-16 w-auto md:h-18"
-            />
-            <div className="flex items-center gap-3">
-              <ModeToggle />
-              <Link
-                href="/login"
-                className="hidden text-sm font-medium text-[#181c22] dark:text-zinc-200 transition-colors hover:text-[#4b39e6] sm:inline-flex"
-              >
-                Log in
-              </Link>
-              <ButtonLink
-                href="/signup"
-                className="rounded-full bg-[#181c22] px-5 py-2.5 text-sm font-medium text-white hover:bg-[#4b39e6]"
-              >
-                Sign up for free
-              </ButtonLink>
-            </div>
-          </div>
-        </header>
+        <SiteHeader />
 
         <WavyBackground
           backgroundFill="transparent"
           waveOpacity={0.3}
           colors={["#4b39e6", "#22c55e", "#38bdf8", "#818cf8", "#c084fc"]}
-          containerClassName="absolute inset-x-0 top-0 h-[450px] md:h-[550px] z-0 pointer-events-none"
+          containerClassName="absolute inset-x-0 top-24 md:top-32 h-[450px] md:h-[550px] z-0 pointer-events-none"
           className="hidden"
         />
         <div className="relative z-10 mx-auto max-w-7xl px-4 pb-20 pt-14 md:px-10 md:pb-28 md:pt-20">
           <div className="mx-auto flex max-w-4xl flex-col items-center text-center">
             <h1 className="font-display text-5xl font-bold leading-[1.02] tracking-[-0.03em] text-[#181c22] dark:text-zinc-50 md:text-7xl">
               Get paid on time.
-              <span className="block text-[#4b39e6]">Every time.</span>
+              <span className="block text-[#4b39e6]">
+                <DiaTextReveal text="Every time." textColor="#4b39e6" />
+              </span>
             </h1>
             <p className="mt-6 max-w-2xl text-lg leading-8 text-[#4d5157] dark:text-zinc-300 md:text-xl">
               The platform sends smart reminders, pauses when clients respond,
@@ -285,30 +268,7 @@ export default function LandingPage() {
         </div>
       </section>
 
-      <footer className="border-t border-[#d8d8d8] bg-[#181c22] text-white">
-        <div className="mx-auto flex max-w-7xl flex-col gap-6 px-4 py-12 md:flex-row md:items-center md:justify-between md:px-10">
-          <div className="flex items-center gap-3">
-            <BrandLogoLink imageClassName="h-16 w-auto brightness-0 invert" />
-          </div>
-          <div className="flex flex-wrap justify-center gap-5 text-sm text-white/65">
-            <a href="#features" className="transition-colors hover:text-white">
-              Privacy Policy
-            </a>
-            <a href="#features" className="transition-colors hover:text-white">
-              Terms of Service
-            </a>
-            <a href="#features" className="transition-colors hover:text-white">
-              Contact
-            </a>
-            <a href="#features" className="transition-colors hover:text-white">
-              Security
-            </a>
-          </div>
-          <div className="text-sm text-white/55">
-            © 2026. All rights reserved.
-          </div>
-        </div>
-      </footer>
+      <SiteFooter />
     </main>
   );
 }
