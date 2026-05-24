@@ -21,8 +21,8 @@ jobs:
           
           echo "Supabase response code: $response"
           
-          if [ "$response" -eq 200 ] || [ "$response" -eq 400 ]; then
-            echo "✅ Supabase is alive"
+          if [ "$response" -eq 200 ] || [ "$response" -eq 400 ] || [ "$response" -eq 401 ]; then
+            echo "✅ Supabase is alive (response: $response)"
           else
             echo "❌ Unexpected response: $response"
             exit 1
