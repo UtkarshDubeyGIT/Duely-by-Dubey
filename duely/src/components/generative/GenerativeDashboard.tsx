@@ -63,7 +63,7 @@ export function GenerativeDashboard({ initialState }: GenerativeDashboardProps) 
   const router = useRouter();
   const store = useMemo(
     () => createStateStore(initialState as Record<string, unknown>),
-    []
+    [initialState]
   );
   const [spec, setSpec] = useState<Spec | null>(null);
   const [loading, setLoading] = useState(true);
