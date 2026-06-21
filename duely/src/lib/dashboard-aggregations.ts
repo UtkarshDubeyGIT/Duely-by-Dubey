@@ -145,10 +145,8 @@ export function computeBusinessData(
       reliable: reliabilityBreakdown.reliable,
       slow: reliabilityBreakdown.slow,
       at_risk: reliabilityBreakdown.at_risk,
-      new: 0,
+      new: reliabilityBreakdown.new,
     },
-    reminder_count_sent_this_month: reminderCountThisMonth,
-    average_days_to_payment: Math.round(avgDaysToPayment * 10) / 10,
   };
 }
 
