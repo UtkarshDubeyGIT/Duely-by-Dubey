@@ -6,6 +6,7 @@ import {
   Bell,
   FileText,
   LayoutDashboard,
+  Sparkles,
   Users,
 } from "lucide-react";
 import { BrandLogoLink } from "@/components/shared/BrandLogoLink";
@@ -22,7 +23,8 @@ import {
 } from "@/components/ui/sidebar";
 
 const nav = [
-  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard, exact: true },
+  { href: "/dashboard/smart", label: "Smart Dashboard", icon: Sparkles },
   { href: "/invoices", label: "Invoices", icon: FileText },
   { href: "/clients", label: "Clients", icon: Users },
   { href: "/reminders", label: "Reminders", icon: Bell },
@@ -41,10 +43,9 @@ export function Sidebar() {
           <SidebarGroupContent>
             <SidebarMenu className="space-y-1 py-4 px-2">
               {nav.map((item) => {
-                const active =
-                  item.href === "/"
-                    ? pathname === "/"
-                    : pathname.startsWith(item.href);
+                const active = item.exact
+                  ? pathname === item.href
+                  : pathname.startsWith(item.href);
                 return (
                   <SidebarMenuItem key={item.href}>
                     <SidebarMenuButton

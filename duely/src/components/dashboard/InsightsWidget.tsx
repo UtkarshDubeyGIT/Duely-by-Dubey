@@ -1,10 +1,11 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Sparkles, RotateCw } from "lucide-react";
+import { Sparkles, RotateCw, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 
 export function InsightsWidget() {
   const [insights, setInsights] = useState<string[] | null>(null);
@@ -127,7 +128,17 @@ export function InsightsWidget() {
               </div>
             ))}
           </div>
-          <div className="mt-4 text-right text-[10px] sm:text-xs text-zinc-400 dark:text-zinc-500 font-medium">
+          <div className="mt-4 pt-3 border-t border-zinc-100 dark:border-zinc-800">
+            <Link
+              href="/dashboard/smart"
+              className="inline-flex items-center gap-1.5 text-xs text-indigo-600 dark:text-indigo-400 font-semibold hover:text-indigo-700 dark:hover:text-indigo-300 transition-colors"
+            >
+              <Sparkles className="h-3 w-3" />
+              Open Smart Dashboard
+              <ArrowRight className="h-3 w-3" />
+            </Link>
+          </div>
+          <div className="mt-2 text-right text-[10px] sm:text-xs text-zinc-400 dark:text-zinc-500 font-medium">
             Generated just now · Powered by Gemini
           </div>
         </div>
