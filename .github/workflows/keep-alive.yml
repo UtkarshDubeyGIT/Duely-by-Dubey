@@ -2,8 +2,8 @@ name: Duely — Supabase Keep Alive
 
 on:
   schedule:
-    # Runs every 3 days at 9:00 AM UTC
-    - cron: '0 9 */3 * *'
+    # Runs every day at 9:00 AM UTC
+    - cron: "0 9 * * *"
   workflow_dispatch: # allows manual trigger from GitHub Actions tab
 
 jobs:
@@ -18,9 +18,9 @@ jobs:
             "${{ secrets.NEXT_PUBLIC_SUPABASE_URL }}/rest/v1/" \
             -H "apikey: ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}" \
             -H "Authorization: Bearer ${{ secrets.NEXT_PUBLIC_SUPABASE_ANON_KEY }}")
-          
+
           echo "Supabase response code: $response"
-          
+
           if [ "$response" -eq 200 ] || [ "$response" -eq 400 ] || [ "$response" -eq 401 ]; then
             echo "✅ Supabase is alive (response: $response)"
           else
@@ -33,7 +33,7 @@ jobs:
           response=$(curl -s -o /dev/null -w "%{http_code}" \
             "https://duely.tech")
           echo "duely.tech response code: $response"
-          
+
           if [ "$response" -eq 200 ]; then
             echo "✅ duely.tech is alive"
           else
