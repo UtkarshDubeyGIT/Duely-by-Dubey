@@ -188,22 +188,22 @@ export function buildTieredStateModel(
   for (let i = 29; i >= 0; i--) {
     const d = new Date(now);
     d.setDate(d.getDate() - i);
-    const dateStr = d.toISOString().slice(0, 7);
+    const dateStr = d.toISOString().slice(0, 10);
     const paid = invoices
       .filter(
         (inv) =>
           inv.status === "paid" &&
           inv.paid_date &&
-          inv.paid_date.slice(0, 7) === dateStr
+          inv.paid_date.slice(0, 10) === dateStr
       )
       .reduce((sum, inv) => sum + Number(inv.total_amount || 0), 0);
     const unpaid = invoices
       .filter(
         (inv) =>
           (inv.status === "pending" || inv.status === "overdue") &&
-          inv.issued_date.slice(0, 7) <= dateStr
+          inv.issued_date <= dateStr
       )
-      .reduce((sum, inv) => sum + Number(inv.amount || 0), 0);
+      .reduce((sum, inv) => sum + Number(inv.total_amount || 0), 0);
     paymentTrend.push({ date: dateStr, paid, unpaid });
   }
 
