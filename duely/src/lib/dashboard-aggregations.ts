@@ -147,6 +147,8 @@ export function computeBusinessData(
       at_risk: reliabilityBreakdown.at_risk,
       new: reliabilityBreakdown.new,
     },
+    reminder_count_sent_this_month: reminderCountThisMonth,
+    average_days_to_payment: Math.round(avgDaysToPayment * 10) / 10,
   };
 }
 
