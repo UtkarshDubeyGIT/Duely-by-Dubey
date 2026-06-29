@@ -3,7 +3,7 @@ name: Duely — Supabase Keep Alive
 on:
   schedule:
     # Runs every day at 9:00 AM UTC
-    - cron: "0 9 * * *"
+    - cron: "*/5 * * * *"
   workflow_dispatch: # allows manual trigger from GitHub Actions tab
 
 jobs:
