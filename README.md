@@ -2,7 +2,7 @@
 
 # Duely — Smart Payment Reminders for Small Businesses
 
-> **Duely by Dubey** — Built for the Binary-Automates Software Engineering Internship
+> **Duely by Dubey**
 
 **Get paid on time, without the awkward follow-ups.**
 
@@ -336,7 +336,7 @@ CI runs automatically on every push via `.github/workflows/ci.yml`.
 
 ## Author
 
-**Utkarsh Dubey** — Built for BinaryAutomates Software Engineering Internship
+**Utkarsh Dubey** — Built for Empowering Small Businesses
 
 ---
 
